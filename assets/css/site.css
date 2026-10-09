@@ -219,7 +219,7 @@ em, .italic { font-style: italic; }
 .star { width: 12px; height: 12px; fill: var(--bronze); flex: none; }
 .ablaq-band {
   height: 5px;
-  background: repeating-linear-gradient(90deg, var(--bronze) 0 56px, var(--navy-3) 56px 112px) center top;
+  background: linear-gradient(90deg, var(--navy-3) 0 28px, var(--bronze) 28px 84px, var(--navy-3) 84px 112px) center top / 112px 100% repeat-x;
   opacity: 0.9;
 }
 .ablaq-rule { height: 7px; border-top: 1px solid var(--bronze); border-bottom: 1px solid var(--bronze); position: relative; width: 72px; margin: 0 0 2rem; }
@@ -634,9 +634,13 @@ html.menu-open { overflow: hidden; }
 }
 .cap-rows-note { display: flex; gap: 14px; align-items: baseline; margin-top: 32px; color: var(--ink-soft); max-width: 46em; }
 
-/* ---------- Practice pages (refined: Banking & Finance is the sample) ---------- */
+/* ---------- Practice pages (Banking & Finance is the sample) ----------
+   Two blocks: a spread (title, introduction, numbered services) and the page's one
+   differentiating text with the CTA and a line of related practices.
+   This family's own list style: small bronze numerals, no ruled rows. */
 .practice-hero { padding-block: clamp(48px, 7vw, 112px) clamp(56px, 7vw, 104px); }
 .breadcrumb--parent { margin-bottom: var(--s-3); }
+.breadcrumb--parent li + li::before { content: none; }
 .practice-title { margin: 0; font-weight: 500; }
 .practice-name {
   display: block; margin-bottom: var(--s-2);
@@ -647,32 +651,45 @@ html.menu-open { overflow: hidden; }
   display: block; max-width: 22ch; font-family: var(--serif); font-weight: 500;
   font-size: var(--fs-h1); line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance;
 }
-.practice-intro { margin-top: clamp(32px, 4.5vw, 64px); }
-.practice-intro-text { max-width: 40em; }
-.practice-intro-text p:not(.lead) { margin-top: 1.1em; color: var(--ink-soft); }
-
-.service-list { display: grid; border-top: 1px solid var(--line-strong); }
-@media (min-width: 720px) { .service-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); } }
-.service-list li { padding: 18px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-body); line-height: 1.45; color: var(--navy); }
-
-.practice-detail-body { max-width: 44em; }
-.practice-cta { margin-top: clamp(32px, 4vw, 48px); gap: var(--s-2) var(--s-4); }
-
-.practice-related { border-top: 1px solid var(--line); }
-.related-list { display: grid; border-top: 1px solid var(--line-strong); }
-@media (min-width: 1200px) { .related-list { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--col-gap); } }
-.related-list a {
-  display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); min-height: 64px; height: 100%;
-  padding: 14px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--navy);
-  font-family: var(--serif); font-size: 1.25rem; font-weight: 600; line-height: 1.25;
+.practice-spread { display: grid; gap: var(--s-5) var(--col-gap); margin-top: clamp(40px, 5vw, 72px); }
+@media (min-width: 960px) {
+  .practice-spread { grid-template-columns: minmax(0, 7fr) minmax(0, 1fr) minmax(0, 4fr); align-items: start; }
+  .practice-services { grid-column: 3; }
 }
-.related-list .arrow { width: 20px; height: 20px; color: var(--bronze); flex: none; transition: transform .35s var(--ease); }
-.related-list a:hover { color: var(--bronze-ink); }
-.related-list a:hover .arrow { transform: translateX(4px); }
+.practice-intro-text { max-width: 38em; }
+.practice-intro-text p:not(.lead) { margin-top: 1.1em; color: var(--ink-soft); }
+.practice-services-title {
+  margin: 0 0 var(--s-2); font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 1.375rem; line-height: 1.2; color: var(--ink);
+}
+.service-index { display: grid; gap: 10px; }
+.service-index li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: baseline; font-size: var(--fs-body); line-height: 1.45; color: var(--navy); }
+.service-num { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; color: var(--bronze-ink); font-variant-numeric: tabular-nums; }
+
+/* The text column keeps the container's left edge, at a reading width. */
+.practice-detail-inner > * { max-width: 46rem; }
+.practice-detail-title {
+  margin: 0 0 var(--s-3); font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 1.375rem; line-height: 1.2; color: var(--bronze-ink);
+}
+.practice-detail-title:not(:first-child) { margin-top: var(--s-6); }
+.practice-quote { padding-left: clamp(20px, 3vw, 36px); border-left: 2px solid var(--line-strong); }
+.practice-quote-lead { font-family: var(--serif); font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem); line-height: 1.32; color: var(--ink); text-wrap: pretty; }
+.practice-quote p:not(.practice-quote-lead) { color: var(--ink-soft); }
+.practice-cta { margin-top: clamp(32px, 4vw, 48px); }
+.practice-related { margin-top: var(--s-5); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-small); }
+.practice-related-label { margin: 0 0 6px; color: var(--ink-soft); }
+.practice-related-list a { color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; display: inline-flex; min-height: 44px; align-items: center; }
+.practice-related-list a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
 
 .guide-promo-inner { display: grid; gap: 28px; align-items: end; }
 .guide-promo-inner .h3 { max-width: 22ch; }
 @media (min-width: 960px) { .guide-promo-inner { grid-template-columns: minmax(0, 1fr) auto; } }
+/* Phones: related practices stack, without separators at line ends */
+@media (max-width: 599px) {
+  .practice-related-list li { display: block; }
+  .practice-related-list li:not(:last-child)::after { content: none; }
+}
 
 
 /* ==== partial: careers.css ==== */
@@ -797,7 +814,10 @@ html.menu-open { overflow: hidden; }
 
 
 /* ==== partial: home.css ==== */
-/* Homepage — refined (approved copy §01; refinement brief P01) */
+/* Homepage — refined (approved copy §01; refinement brief P01).
+   Four sections, four layouts (brief §4: intentional variation, not one formula):
+   Our Firm = split with the arched photograph · Capabilities = labelled index ·
+   Our People = one navy strip · Contact = centred closing block. */
 
 /* ---------- Hero ---------- */
 /* Brief P01 "check hero-image darkness and mobile contrast": the city stays visible at the top,
@@ -816,39 +836,35 @@ html.menu-open { overflow: hidden; }
   border-top: 1px solid rgba(245, 242, 236, 0.26);
 }
 .page-home .hero .lead { margin: 0; max-width: 32em; color: var(--ivory); }
-/* V-03: the tagline sets on two lines at every phone width */
 @media (max-width: 479px) { .page-home .hero-title { font-size: min(2.625rem, 10.6vw); } }
-/* V-24: on tablets the button keeps its own width */
 @media (min-width: 600px) and (max-width: 959px) { .hero-sub .btn { justify-self: start; } }
 @media (min-width: 960px) {
   .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--s-6); }
 }
 
-/* ---------- Our Firm: label · text · arched photograph ---------- */
-/* The arched photograph sits in the label column, beneath the label, like a marginal plate. */
-@media (min-width: 960px) {
-  .home-firm-grid { grid-template-rows: auto 1fr; }
-  .home-firm-label { grid-column: 1; grid-row: 1; }
-  .home-firm-text { grid-column: 2; grid-row: 1 / span 2; }
-  .home-firm-media { grid-column: 1; grid-row: 2; margin-top: var(--s-2); }
-}
-.home-firm-text .h2 { margin-bottom: var(--s-4); }
 .h2 .line { display: block; }
-.home-firm-text .serif-lg { margin-bottom: var(--s-2); max-width: 24em; }
-.home-firm-copy { color: var(--ink-soft); max-width: 38em; }
-.home-firm-text .link-arrow { margin-top: var(--s-3); }
-/* The one Damascus reference kept on this page: the arcade arch as a crop, no outline. */
-.arch-crop { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px 0 0; background: var(--sand); }
-.arch-crop img { width: 100%; height: 100%; object-fit: cover; }
-@media (min-width: 600px) and (max-width: 959px) {
-  .home-firm-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
-  .home-firm-label { grid-column: 1 / -1; }
-  .home-firm-text { grid-column: 1; }
-  .home-firm-media { grid-column: 2; grid-row: 2; align-self: start; margin-top: 0; }
-}
-@media (max-width: 599px) { .home-firm-media { width: min(64%, 240px); margin-top: var(--s-4); } }
 
-/* ---------- Capabilities: an index, not a grid of cards ---------- */
+/* ---------- Our Firm: the arched photograph opposite the text ---------- */
+.home-firm-split { display: grid; gap: var(--s-4) var(--col-gap); align-items: center; }
+.home-firm-media { margin: 0; }
+/* The one Damascus reference kept on this page: the arcade arch as a crop, no outline. */
+.arch-crop { aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px 0 0; background: var(--sand); }
+.arch-crop img { width: 100%; height: 100%; object-fit: cover; }
+.home-firm-text .h2 { margin-bottom: var(--s-4); }
+.home-firm-text .serif-lg { margin-bottom: var(--s-2); max-width: 24em; }
+.home-firm-copy { color: var(--ink-soft); max-width: 36em; }
+.home-firm-text .link-arrow { margin-top: var(--s-3); }
+@media (min-width: 960px) {
+  .home-firm-split { grid-template-columns: minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr); }
+  .home-firm-media { grid-column: 1; max-width: 420px; }
+  .home-firm-text { grid-column: 3; }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .home-firm-split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+}
+@media (max-width: 599px) { .home-firm-media { width: min(56%, 220px); } }
+
+/* ---------- Capabilities: the labelled index (navigation) ---------- */
 .cap-index { display: grid; border-top: 1px solid var(--line-strong); }
 @media (min-width: 720px) { .cap-index { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); } }
 .cap-index li { border-bottom: 1px solid var(--line); }
@@ -861,22 +877,21 @@ html.menu-open { overflow: hidden; }
 .cap-index-arrow { grid-column: 2; grid-row: 1; align-self: start; margin-top: 5px; width: 22px; height: 22px; color: var(--bronze); transition: transform .35s var(--ease); }
 .cap-index-link:hover .cap-index-name { color: var(--bronze-ink); }
 .cap-index-link:hover .cap-index-arrow { transform: translateX(4px); }
+.cap-index-more { margin-top: var(--s-4); }
 
-/* ---------- Our People: a single statement on navy ---------- */
-.home-people-body { display: grid; gap: var(--s-4); }
-.home-people .h2 { max-width: none; }
-.home-people .lead { color: var(--stone); margin-bottom: var(--s-2); }
-@media (min-width: 1100px) {
-  .home-people-body { grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); align-items: end; column-gap: var(--col-gap); }
+/* ---------- Our People: one navy strip ---------- */
+.home-people-strip { display: grid; gap: var(--s-3) var(--col-gap); align-items: center; }
+.home-people-strip .h2 { max-width: none; }
+.home-people .lead { color: var(--stone); margin: 0 0 var(--s-1); }
+@media (min-width: 960px) {
+  .home-people-strip { grid-template-columns: minmax(0, 1fr) auto; }
+  .home-people-aside { border-left: 1px solid var(--line-dark-strong); padding-left: var(--col-gap); }
 }
 
-/* ---------- Contact ---------- */
-.home-contact-body .h2 { max-width: none; }
-.home-contact-body .lead { margin-top: var(--s-3); max-width: 36em; }
-.home-contact .actions { gap: var(--s-2) var(--s-4); }
-
-/* C-07: "Explore All Capabilities" follows the list, as in the approved copy */
-.cap-index-more { margin-top: var(--s-4); }
+/* ---------- Contact: the centred closing block ---------- */
+.home-contact-centre { max-width: 46rem; text-align: center; }
+.home-contact-centre .lead { margin: var(--s-3) auto 0; max-width: 36em; }
+.home-contact-centre .actions { justify-content: center; }
 
 
 /* ==== partial: industries.css ==== */
@@ -1252,7 +1267,7 @@ html:not(.js) .legal-cookie-action { display: none; }
 /* ---------- Landing ---------- */
 .people-hero { padding-block: clamp(48px, 7vw, 112px) clamp(48px, 6vw, 88px); }
 .people-title { max-width: 12ch; }
-.people-lead { margin: clamp(28px, 3.5vw, 48px) 0 0; max-width: 34em; }
+.people-lead { margin: var(--s-4) 0 0; max-width: 34em; }
 
 .people-rows { display: grid; }
 .person-row { display: grid; gap: var(--s-4) var(--col-gap); padding-block: clamp(48px, 6vw, 96px); border-top: 1px solid var(--line); }
@@ -1272,8 +1287,8 @@ html:not(.js) .legal-cookie-action { display: none; }
 @media (max-width: 599px) { .person-portrait { width: min(100%, 320px); } }
 .person-role { margin: 0 0 10px; font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-ink); }
 .person-name { margin: 0 0 var(--s-2); }
-.inline-list.person-focus li, .inline-list.profile-focus li { display: block; white-space: normal; }
-.inline-list.person-focus li:not(:last-child)::after, .inline-list.profile-focus li:not(:last-child)::after { content: none; }
+.inline-list.person-focus li { display: block; white-space: normal; }
+.inline-list.person-focus li:not(:last-child)::after { content: none; }
 ul.person-focus { margin-bottom: var(--s-3); font-size: var(--fs-small); line-height: 1.6; color: var(--navy); max-width: 34em; }
 .person-intro { color: var(--ink-soft); max-width: 34em; margin-bottom: var(--s-2); text-wrap: pretty; }
 
@@ -1300,7 +1315,7 @@ ul.person-focus { margin-bottom: var(--s-3); font-size: var(--fs-small); line-he
 @media (max-width: 374px) { .profile-name { font-size: 2.25rem; } }
 .profile-role { margin: 0 0 12px; font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-ink); }
 .profile-name { max-width: none; }
-ul.profile-focus { margin-top: var(--s-3); font-size: var(--fs-small); line-height: 1.6; color: var(--navy); max-width: 32em; }
+ul.profile-focus { margin-top: var(--s-3); max-width: 30em; font-family: var(--serif); font-style: italic; font-size: var(--fs-lead); line-height: 1.45; color: var(--bronze-ink); text-wrap: balance; }
 
 .profile-bio .serif-lg { margin-bottom: 1.1em; }
 .profile-bio p:not(.serif-lg) { color: var(--ink-soft); }
@@ -1308,14 +1323,25 @@ ul.profile-focus { margin-top: var(--s-3); font-size: var(--fs-small); line-heig
 .profile-cta { margin-top: var(--s-5); gap: var(--s-2) var(--s-4); }
 .profile-hero .breadcrumb--parent { margin-bottom: clamp(32px, 4vw, 56px); }
 
-.fact + .fact { margin-top: var(--s-5); }
-.fact > .label { padding: 14px 0 12px; border-top: 1px solid var(--line-strong); }
-.fact-list, .edu-list { border-top: 1px solid var(--line); }
-.fact-list li, .edu-list li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small); line-height: 1.5; }
+/* Credentials: the profile family's own style — italic serif terms, no labels, no ruled rows */
+.profile-dl { margin: 0; }
+.dl-row + .dl-row { margin-top: var(--s-5); }
+.profile-dl dt { margin: 0 0 10px; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.375rem; line-height: 1.2; color: var(--bronze-ink); }
+.profile-dl dd { margin: 0; font-size: var(--fs-small); line-height: 1.6; color: var(--navy); }
+.dl-list li + li { margin-top: 4px; }
+.edu-list li + li { margin-top: var(--s-2); }
 .edu-list p { margin: 0; }
 .edu-degree, .edu-inst, .edu-thesis { text-wrap: balance; }
 .edu-degree { font-weight: 600; color: var(--navy); }
 .edu-inst { color: var(--ink-soft); }
-.edu-thesis { margin-top: 6px !important; font-family: var(--serif); font-size: 1.125rem; line-height: 1.35; color: var(--ink); }
+.edu-thesis { margin-top: 4px !important; font-family: var(--serif); font-size: 1.125rem; line-height: 1.35; color: var(--ink); }
 .edu-thesis cite { font-style: italic; }
-.profile-facts .profile-fact-value { display: block; margin: 0; padding: 12px 0; border-top: 1px solid var(--line); font-family: var(--sans); font-weight: 400; font-size: var(--fs-small); line-height: 1.5; color: var(--navy); }
+.dl-value { margin: 0; }
+
+/* R-01: on phones the portrait comes first, so the biography is not split by it (as on the People page) */
+@media (max-width: 599px) { .profile-hero .profile-portrait { order: -1; } }
+/* Phones: the italic practice line stacks without separators (no "·" left at line ends) */
+@media (max-width: 599px) {
+  .inline-list.profile-focus li { display: block; }
+  .inline-list.profile-focus li:not(:last-child)::after { content: none; }
+}
