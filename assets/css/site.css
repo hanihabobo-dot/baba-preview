@@ -416,11 +416,8 @@ html.menu-open { overflow: hidden; }
 .media img, .media .ph { width: 100%; height: 100%; object-fit: cover; }
 .media-caption { position: absolute; left: 0; bottom: 0; padding: 10px 16px; font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ivory); background: rgba(16,28,44,0.72); }
 
-.arch { position: relative; margin: 0; padding: 18px 18px 0 0; }
-.arch::before {
-  content: ""; position: absolute; inset: 0 0 18px 18px; border: 1px solid var(--bronze);
-  border-radius: 999px 999px var(--radius) var(--radius); pointer-events: none;
-}
+.arch { position: relative; margin: 0; }
+.arch::before { content: none; }   /* brief §4: no gold outlines */
 .arch-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px var(--radius) var(--radius); background: var(--navy-2); }
 .arch-frame img, .arch-frame .ph { width: 100%; height: 100%; object-fit: cover; }
 .arch-caption { margin-top: 18px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); display: flex; gap: 12px; align-items: center; }
@@ -623,12 +620,15 @@ html.menu-open { overflow: hidden; }
 .cap-row-num { font-family: var(--serif); font-style: italic; color: var(--bronze-ink); font-size: 1.125rem; }
 .cap-row-title { font-family: var(--serif); font-weight: 500; font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem); line-height: 1.12; text-wrap: balance; transition: color .3s var(--ease); }
 .cap-row-desc { grid-column: 2; margin: 0; color: var(--ink-soft); font-size: 1rem; max-width: 36em; }
-.cap-row-arrow { grid-column: 3; grid-row: 1; align-self: center; color: var(--bronze); }
+.cap-row-arrow { grid-column: 3; grid-row: 1; align-self: center; display: inline-flex; align-items: center; gap: 10px; color: var(--bronze); }
+/* Approved §06: each practice carries its own "Explore" label */
+.cap-row-explore { font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-ink); }
+@media (max-width: 719px) { .cap-row-explore { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
 .cap-row-arrow .arrow { width: 26px; height: 26px; transition: transform .4s var(--ease); }
 .cap-row:hover .cap-row-arrow .arrow { transform: translateX(6px); }
 .cap-row:hover .cap-row-title { color: var(--bronze-ink); }
 @media (min-width: 960px) {
-  .cap-row { grid-template-columns: 4rem minmax(0, 6fr) minmax(0, 5fr) 40px; align-items: center; }
+  .cap-row { grid-template-columns: 4rem minmax(0, 6fr) minmax(0, 5fr) auto; align-items: center; }
   .cap-row-desc { grid-column: 3; grid-row: 1; }
   .cap-row-arrow { grid-column: 4; }
 }
@@ -792,7 +792,6 @@ html.menu-open { overflow: hidden; }
 /* Click-to-load Google Map (site.js [data-map]); nothing is requested from Google before the click. */
 .contact-map-wrap { height: 100%; }
 .contact-map { position: relative; height: 100%; min-height: 420px; overflow: hidden; border-radius: var(--radius); background: var(--navy-2); color: var(--ivory); isolation: isolate; }
-.contact-map:not(.is-loaded) { background-image: url("../img/lattice.svg"); background-size: 88px 88px; }
 .contact-map:not(.is-loaded)::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(16, 28, 44, 0.86); }
 .contact-map:not(.is-loaded)::after { content: ""; position: absolute; inset: 14px; z-index: -1; border: 1px solid var(--line-dark); pointer-events: none; }
 .contact-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
@@ -1148,15 +1147,11 @@ html:not(.js) .legal-cookie-action { display: none; }
 .nf-grid { display: grid; gap: 48px; align-items: center; }
 @media (min-width: 900px) { .nf-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); } }
 .nf-text .lead { margin-top: clamp(20px, 2.5vw, 32px); max-width: 30em; }
-.nf-arch { position: relative; width: 100%; max-width: 340px; padding: 18px 18px 0 0; justify-self: end; }
-.nf-arch::before {
-  content: ""; position: absolute; inset: 0 0 18px 18px; border: 1px solid var(--bronze);
-  border-radius: 999px 999px var(--radius) var(--radius); pointer-events: none;
-}
+.nf-arch { position: relative; width: 100%; max-width: 340px; justify-self: end; }
 .nf-arch-frame {
   position: relative; display: grid; place-items: center; aspect-ratio: 4 / 5; overflow: hidden;
   border-radius: 999px 999px var(--radius) var(--radius);
-  background-color: var(--navy); background-image: url("../img/lattice.svg"); background-size: 88px 88px;
+  background-color: var(--navy);
 }
 .nf-arch-frame::before { content: ""; position: absolute; inset: 0; background: rgba(16, 28, 44, 0.84); }
 .nf-code { position: relative; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(4.5rem, 2.5rem + 5vw, 7.5rem); line-height: 1; color: var(--ivory); }
@@ -1340,8 +1335,6 @@ ul.profile-focus { margin-top: var(--s-3); max-width: 30em; font-family: var(--s
 
 /* R-01: on phones the portrait comes first, so the biography is not split by it (as on the People page) */
 @media (max-width: 599px) { .profile-hero .profile-portrait { order: -1; } }
-/* Phones: the italic practice line stacks without separators (no "·" left at line ends) */
-@media (max-width: 599px) {
-  .inline-list.profile-focus li { display: block; }
-  .inline-list.profile-focus li:not(:last-child)::after { content: none; }
-}
+/* The italic practice line stacks at every width, so no "·" is ever left hanging at a line end (VQ-14). */
+.inline-list.profile-focus li { display: block; white-space: normal; }
+.inline-list.profile-focus li:not(:last-child)::after { content: none; }
