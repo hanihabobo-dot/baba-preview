@@ -778,8 +778,8 @@ html.menu-open { overflow: hidden; }
 .office-addr-line { display: block; text-wrap: balance; }
 
 .office-lines { margin: clamp(28px, 3vw, 36px) 0 0; border-top: 1px solid var(--line); }
-.office-line { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); align-items: center; min-height: 56px; border-bottom: 1px solid var(--line); }
-.office-line dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; color: var(--bronze-ink); }
+.office-line { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); align-items: center; min-height: 56px; border-bottom: 1px solid var(--line); }
+.office-line dt { font-size: 0.9375rem; font-weight: 500; color: var(--ink-soft); }
 .office-line dd { margin: 0; font-size: 1.0625rem; font-variant-numeric: lining-nums; }
 .office-line a, .office-line dd > span { display: inline-flex; align-items: center; min-height: 44px; }
 .office-line a { color: var(--ink); text-decoration: none; background: linear-gradient(var(--bronze), var(--bronze)) 0 calc(100% - 10px) / 0 1px no-repeat; transition: background-size .45s var(--ease), color .3s var(--ease); }
