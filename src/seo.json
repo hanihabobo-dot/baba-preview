@@ -1,0 +1,211 @@
+{
+ "/": {
+  "page": "Home",
+  "title": "Baba Law Firm | Legal Advice for Business in Syria",
+  "description": "Baba Law Firm advises domestic and international clients on business, investment, regulatory and dispute resolution matters in Syria. Founded in 1967."
+ },
+ "/our-firm": {
+  "page": "Our Firm",
+  "title": "Baba Law Firm | Syrian Law Firm in Damascus",
+  "description": "Independent Syrian law firm in Damascus advising businesses and investors on corporate, commercial, regulatory and dispute resolution matters."
+ },
+ "/our-people": {
+  "page": "Our People",
+  "title": "Our People | Baba Law Firm",
+  "description": "Meet Baba Law Firm’s team of 25 lawyers, led by Dr. Mohamad Baba, with Senior Counsel Tawfeeq Baba’s judicial and arbitral experience."
+ },
+ "/our-people/tawfeeq-baba": {
+  "page": "Tawfeeq Baba — Profile",
+  "title": "Tawfeeq Baba, Senior Counsel | Baba Law Firm",
+  "description": "Tawfeeq Baba, Senior Counsel at Baba Law Firm and former President of the Syrian Council of State, brings extensive judicial and arbitral experience."
+ },
+ "/our-people/mohamad-baba": {
+  "page": "Dr. Mohamad Baba — Profile",
+  "title": "Dr. Mohamad Baba, Managing Partner | Baba Law Firm",
+  "description": "Dr. Mohamad Baba, Managing Partner of Baba Law Firm, advises on corporate and commercial law, foreign investment, banking and arbitration in Syria."
+ },
+ "/capabilities/company-formation": {
+  "page": "Company Formation & Corporate Structuring",
+  "title": "Company Formation in Syria | Baba Law Firm",
+  "description": "Legal advice on company formation and corporate structuring in Syria under the Companies Law, including branches, foreign shareholding and registrations."
+ },
+ "/capabilities/corporate-governance": {
+  "page": "Corporate Governance & Compliance",
+  "title": "Corporate Governance & Compliance in Syria | Baba Law Firm",
+  "description": "Advice on corporate governance, shareholder rights, boards, signing authority and compliance with Syrian corporate law for local and foreign companies."
+ },
+ "/capabilities/corporate-commercial": {
+  "page": "Corporate & Commercial",
+  "title": "Corporate & Commercial Law in Syria | Baba Law Firm",
+  "description": "Commercial contracts, agency and distribution, joint ventures and cross-border transactions under Syrian law. Legal advice for businesses in Syria."
+ },
+ "/capabilities/mergers-acquisitions": {
+  "page": "Mergers, Acquisitions & Restructuring",
+  "title": "Mergers & Acquisitions in Syria | Baba Law Firm",
+  "description": "Legal advice on mergers, acquisitions, share transfers, legal due diligence, merger control and corporate restructuring in Syria."
+ },
+ "/capabilities/foreign-investment": {
+  "page": "Foreign Investment & Market Entry",
+  "title": "Foreign Investment & Market Entry in Syria | Baba Law Firm",
+  "description": "Advice for foreign investors entering Syria: Investment Law No. 18 of 2021, market entry structures, branches, commercial agents, licences and guarantees."
+ },
+ "/capabilities/banking-finance": {
+  "page": "Banking & Finance",
+  "title": "Banking & Finance Law in Syria | Baba Law Firm",
+  "description": "Banking regulation, financing, security, Islamic finance, trade finance, foreign exchange and anti-money laundering advice under Syrian law."
+ },
+ "/capabilities/regulatory-compliance-sanctions": {
+  "page": "Regulatory Compliance & Sanctions",
+  "title": "Regulatory Compliance & Sanctions in Syria | Baba Law Firm",
+  "description": "Regulatory compliance, sanctions screening, counterparty due diligence and anti-money laundering requirements for business in Syria."
+ },
+ "/capabilities/arbitration-dispute-resolution": {
+  "page": "Arbitration & Dispute Resolution",
+  "title": "Arbitration & Dispute Resolution in Syria | Baba Law Firm",
+  "description": "Arbitration, commercial litigation and enforcement of arbitral awards in Syria under Arbitration Law No. 4 of 2008 and the New York Convention."
+ },
+ "/capabilities/projects-construction-infrastructure": {
+  "page": "Projects, Construction & Infrastructure",
+  "title": "Construction & Infrastructure Law in Syria | Baba Law Firm",
+  "description": "Legal advice on construction contracts, FIDIC, PPP and infrastructure projects, public-sector contracts and construction disputes in Syria."
+ },
+ "/capabilities/real-estate-development": {
+  "page": "Real Estate & Development",
+  "title": "Real Estate & Development Law in Syria | Baba Law Firm",
+  "description": "Real estate transactions, title due diligence, foreign ownership, leasing, real estate development licensing and off-plan sales under Syrian law."
+ },
+ "/capabilities/employment": {
+  "page": "Employment",
+  "title": "Employment Law in Syria | Baba Law Firm",
+  "description": "Employment contracts, Labour Law No. 17 of 2010, social insurance, termination, foreign employees and employment disputes. Advice for employers in Syria."
+ },
+ "/capabilities/intellectual-property-data-protection": {
+  "page": "Intellectual Property & Data Protection",
+  "title": "IP & Data Protection in Syria | Baba Law Firm",
+  "description": "Trademark, patent and copyright protection and personal data compliance under Law No. 12 of 2024 for businesses operating in Syria."
+ },
+ "/capabilities/technology-fintech": {
+  "page": "Technology & FinTech (capability)",
+  "title": "Technology & FinTech Law in Syria | Baba Law Firm",
+  "description": "Technology contracts, electronic transactions, FinTech licensing and electronic payment regulation in Syria. Legal advice for digital businesses."
+ },
+ "/capabilities/tax-customs": {
+  "page": "Tax & Customs",
+  "title": "Tax & Customs Law in Syria | Baba Law Firm",
+  "description": "Corporate tax, tax disputes, customs classification and valuation, import and export procedures and investment incentives in Syria."
+ },
+ "/capabilities/government-public-procurement": {
+  "page": "Regulatory, Government & Public Procurement",
+  "title": "Government Contracts & Procurement in Syria | Baba Law Firm",
+  "description": "Public procurement, government contracts, administrative contracts, licensing and regulatory approvals before Syrian public authorities."
+ },
+ "/capabilities/administrative-law-council-of-state": {
+  "page": "Administrative Law & Council of State Proceedings",
+  "title": "Administrative Law & Council of State | Baba Law Firm",
+  "description": "Challenging administrative decisions, annulment and compensation claims and proceedings before the Syrian Council of State."
+ },
+ "/industries/banking-financial-services": {
+  "page": "Banking & Financial Services",
+  "title": "Banking & Financial Services in Syria | Baba Law Firm",
+  "description": "Legal advice for banks, financial institutions, insurers and payment providers in Syria on licensing, compliance, financing and cross-border banking."
+ },
+ "/industries/construction-infrastructure": {
+  "page": "Construction & Infrastructure",
+  "title": "Construction Sector in Syria | Baba Law Firm",
+  "description": "Legal advice for contractors, developers, consultants and investors in Syria on tendering, classification, public contracts, FIDIC and claims."
+ },
+ "/industries/real-estate-urban-development": {
+  "page": "Real Estate & Urban Development",
+  "title": "Real Estate & Urban Development in Syria | Baba Law Firm",
+  "description": "Legal advice for developers, investors and landowners in Syria on title, planning, development projects, off-plan sales, leasing and public authorities."
+ },
+ "/industries/energy-power": {
+  "page": "Energy & Power",
+  "title": "Energy & Power Sector in Syria | Baba Law Firm",
+  "description": "Legal advice on power generation, renewable energy, IPP and PPP projects, oil and gas, energy transit and project finance in Syria."
+ },
+ "/industries/telecommunications": {
+  "page": "Telecommunications",
+  "title": "Telecommunications Sector in Syria | Baba Law Firm",
+  "description": "Legal advice for telecom operators, infrastructure investors and suppliers in Syria on licensing, spectrum, market entry, networks and compliance."
+ },
+ "/industries/technology-fintech": {
+  "page": "Technology & FinTech (industry)",
+  "title": "Technology & FinTech Sector in Syria | Baba Law Firm",
+  "description": "Legal advice for start-ups, technology companies and FinTech businesses in Syria on structuring, investment, payments licensing, data and IP."
+ },
+ "/industries/aviation": {
+  "page": "Aviation",
+  "title": "Aviation Sector in Syria | Baba Law Firm",
+  "description": "Legal advice for airlines, lessors, financiers and airport investors in Syria on operating approvals, aircraft transactions, airports and compliance."
+ },
+ "/industries/manufacturing-trade": {
+  "page": "Manufacturing & Trade",
+  "title": "Manufacturing & Trade in Syria | Baba Law Firm",
+  "description": "Legal advice for manufacturers, importers, exporters and distributors in Syria on industrial licensing, customs, agency, trade finance and disputes."
+ },
+ "/industries/hospitality-tourism": {
+  "page": "Hospitality & Tourism",
+  "title": "Hospitality & Tourism in Syria | Baba Law Firm",
+  "description": "Legal advice for hotel owners, operators and tourism investors in Syria on investment contracts, hotel development, management agreements and licensing."
+ },
+ "/industries/healthcare-life-sciences": {
+  "page": "Healthcare & Life Sciences",
+  "title": "Healthcare & Life Sciences in Syria | Baba Law Firm",
+  "description": "Legal advice for hospitals, pharmaceutical and medical device companies and investors in Syria on licensing, product registration and distribution."
+ },
+ "/industries/diplomatic-missions-ngos": {
+  "page": "Diplomatic Missions, International Organisations & NGOs",
+  "title": "Diplomatic Missions & NGOs in Syria | Baba Law Firm",
+  "description": "Legal advice for embassies, international organisations and NGOs in Syria on premises, local staff, contracts, registration, licensing and operations."
+ },
+ "/contact": {
+  "page": "Contact",
+  "title": "Contact Baba Law Firm | Damascus, Syria",
+  "description": "Contact Baba Law Firm in Damascus for legal advice on business, investment, corporate matters, arbitration and dispute resolution in Syria."
+ },
+ "/privacy-policy": {
+  "page": "Privacy Policy",
+  "title": "Privacy Policy | Baba Law Firm",
+  "description": "Learn how Baba Law Firm handles personal information submitted through its website, enquiries and recruitment processes."
+ },
+ "/cookie-policy": {
+  "page": "Cookie Policy",
+  "title": "Cookie Policy | Baba Law Firm",
+  "description": "Information about cookies, website security, analytics and privacy preferences on the Baba Law Firm website."
+ },
+ "/legal-notice": {
+  "page": "Legal Notice",
+  "title": "Legal Notice | Baba Law Firm",
+  "description": "Important information about the Baba Law Firm website, professional engagement and website use."
+ },
+ "/careers": {
+  "page": "Careers",
+  "title": "Careers at Baba Law Firm | Damascus",
+  "description": "Explore legal career opportunities at Baba Law Firm in Damascus and learn how to submit your CV."
+ },
+ "/capabilities": {
+  "page": "Capabilities",
+  "title": "Capabilities | Baba Law Firm",
+  "description": "The sixteen capabilities of Baba Law Firm in Syria, from company formation and foreign investment to banking, arbitration and administrative law.",
+  "unapproved": true
+ },
+ "/industries": {
+  "page": "Industries",
+  "title": "Industries | Baba Law Firm",
+  "description": "Baba Law Firm advises clients across eleven industries in Syria, from banking, construction and energy to aviation, healthcare and NGOs.",
+  "unapproved": true
+ },
+ "/sitemap": {
+  "page": "Sitemap",
+  "title": "Sitemap | Baba Law Firm",
+  "description": "All pages of the Baba Law Firm website: the firm, our people, capabilities, industries, contact and legal information.",
+  "unapproved": true
+ },
+ "/404": {
+  "page": "Page Not Found",
+  "title": "Page Not Found | Baba Law Firm",
+  "description": "The page you are looking for may have been moved or renamed, or may no longer be available.",
+  "unapproved": true
+ }
+}

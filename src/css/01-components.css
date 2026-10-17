@@ -1,0 +1,183 @@
+/* ==========================================================================
+   Shared components for the 16 October content
+   ========================================================================== */
+
+/* " — " separators between a bold name and its description stay in the text
+   (copy, screen readers, search) but are drawn as layout, not punctuation. */
+.nowrap, a[href^="tel:"] { white-space: nowrap; }
+.sep { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- Section label (H2) + approved italic sub-heading ---------- */
+.sec-label { margin: 0 0 var(--s-2); }
+.sec-tagline {
+  margin: 0 0 var(--s-4); max-width: 22em;
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(1.875rem, 1.4rem + 1.9vw, 3rem); line-height: 1.12; letter-spacing: -0.005em;
+  color: var(--ink); text-wrap: balance;
+}
+.section--navy .sec-tagline, .cta-band--navy .sec-tagline { color: var(--ivory); }
+@media (min-width: 960px) {
+  .rail > .sec-label { margin: 0; }
+}
+
+/* Page title (H1) and the tagline under it */
+.page-title { max-width: 18ch; text-wrap: balance; }
+.page-tagline {
+  margin: var(--s-3) 0 0; max-width: 30em;
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(1.375rem, 1.16rem + 0.9vw, 2rem); line-height: 1.25; color: var(--bronze-ink); text-wrap: balance;
+}
+.page-intro { margin-top: clamp(32px, 4vw, 56px); max-width: 44rem; }
+.page-intro p { color: var(--ink-soft); text-wrap: pretty; }
+.page-intro .lead { color: var(--ink); }
+
+/* ---------- Long-form sections: label in the rail, text in the body ---------- */
+.doc-sec { padding-block: clamp(48px, 6vw, 88px); border-top: 1px solid var(--line); }
+.doc-sec:first-child { border-top: 0; padding-top: 0; }
+.doc-sec:last-child { padding-bottom: 0; }
+.doc-sec.rail > .sec-label { border-top: 0; padding-top: 0; }
+.doc-sec-body { min-width: 0; }
+.doc-sec .sec-tagline { font-size: clamp(1.5rem, 1.25rem + 1vw, 2.125rem); line-height: 1.18; max-width: 26em; margin-bottom: var(--s-3); }
+.doc-sec .prose { max-width: 44em; }
+.prose p, .prose li { text-wrap: pretty; }
+.prose > :last-child { margin-bottom: 0; }
+
+.sub-h {
+  margin: 2.25rem 0 0.6rem; font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.25rem, 1.15rem + 0.35vw, 1.4375rem); line-height: 1.25; color: var(--ink);
+}
+.sub-h:first-child { margin-top: 0; }
+
+.bullets { list-style: none; margin: 0.25rem 0 1.25em; padding: 0; border-top: 1px solid var(--line); }
+.bullets li { position: relative; padding: 12px 0 12px 24px; border-bottom: 1px solid var(--line); color: var(--ink-soft); line-height: 1.6; }
+.bullets li::before { content: ""; position: absolute; left: 2px; top: calc(12px + 0.8em); width: 9px; height: 1px; background: var(--bronze); }
+
+.italic-line { font-family: var(--serif); font-style: italic; font-size: 1.3125rem; line-height: 1.45; color: var(--ink); }
+.italic-line a { color: inherit; text-decoration-color: var(--bronze); }
+.cta-line { margin: var(--s-4) 0 0; }
+.cta-line .link-arrow { margin-left: -1px; }
+
+/* An arrow link inside a sentence ("please visit Careers →") */
+.inline-arrow { display: inline-flex; align-items: center; gap: 8px; color: var(--navy); text-decoration: underline; text-decoration-color: var(--bronze); text-underline-offset: 0.22em; }
+.inline-arrow .arrow { width: 18px; height: 18px; color: var(--bronze); transition: transform .35s var(--ease); }
+.inline-arrow:hover { color: var(--bronze-ink); }
+.inline-arrow:hover .arrow { transform: translateX(3px); }
+
+/* A link that is a button (Cookie Settings) inside running text */
+.inline-link {
+  background: none; border: 0; padding: 0; margin: 0; font: inherit; color: var(--navy); cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--bronze); text-decoration-thickness: 1px; text-underline-offset: 0.22em;
+}
+.inline-link:hover { color: var(--bronze-ink); }
+
+/* Preview-only notes (not in the production build) */
+.preview-note {
+  display: block; margin: var(--s-3) 0 0; padding: 12px 16px; max-width: 40rem;
+  border: 1px dashed var(--line-strong); border-radius: var(--radius);
+  font-size: 0.875rem; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty;
+}
+.section--navy .preview-note, .on-dark .preview-note { border-color: var(--line-dark-strong); color: var(--stone); }
+
+/* ---------- "How We Assist": the service name beside its description ---------- */
+.svc-intro { margin: 0 0 var(--s-3); color: var(--ink-soft); }
+.svc-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.svc-list-item { display: grid; align-content: start; gap: 6px var(--col-gap); padding: 20px 0 22px; border-bottom: 1px solid var(--line); }
+.svc-name { font-family: var(--serif); font-size: clamp(1.25rem, 1.16rem + 0.3vw, 1.375rem); font-weight: 600; line-height: 1.25; color: var(--navy); text-wrap: balance; }
+.svc-desc { color: var(--ink-soft); line-height: 1.62; text-wrap: pretty; }
+@media (min-width: 720px) {
+  .svc-list-item { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: baseline; }
+}
+.doc-sec--assist .doc-sec-body, .doc-sec--assist .prose { max-width: none; }
+
+/* ---------- Industry pages: "Key Legal Issues" — the bold opening phrase leads each paragraph ---------- */
+.issues { border-top: 1px solid var(--line-strong); max-width: 48em; }
+.issue { margin: 0; padding: 22px 0 24px; border-bottom: 1px solid var(--line); color: var(--ink-soft); line-height: 1.68; text-wrap: pretty; }
+.issue-lead { display: block; margin-bottom: 6px; font-family: var(--serif); font-size: clamp(1.25rem, 1.16rem + 0.3vw, 1.375rem); font-weight: 600; line-height: 1.25; color: var(--navy); }
+
+/* ---------- Related capabilities / industries ---------- */
+.related-band { padding-block: clamp(56px, 7vw, 104px); }
+.related-grid { display: grid; gap: var(--s-6) var(--col-gap); }
+@media (min-width: 960px) {
+  .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .related-grid--single { grid-template-columns: minmax(0, 1fr); }
+  .related-grid--single .related-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+}
+.related-col .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); margin-bottom: 6px; }
+.related-list li { border-bottom: 1px solid var(--line); }
+.related-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 12px 0;
+  font-family: var(--serif); font-size: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem); font-weight: 600; line-height: 1.25;
+  color: var(--navy); text-decoration: none; transition: color .3s var(--ease);
+}
+.related-link > span { text-wrap: balance; }
+.related-link .arrow { width: 20px; height: 20px; flex: none; color: var(--bronze); transition: transform .35s var(--ease); }
+.related-link:hover { color: var(--bronze-ink); }
+.related-link:hover .arrow { transform: translateX(4px); }
+
+/* ---------- Closing "Contact" band ---------- */
+.cta-band { padding-block: clamp(64px, 8vw, 120px); }
+.cta-band .sec-label { color: var(--bronze-light); }
+.cta-statement {
+  margin: 0; max-width: 20em; font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(1.875rem, 1.4rem + 1.9vw, 3rem); line-height: 1.12; color: var(--ivory); text-wrap: balance;
+}
+.cta-band .lead { margin: var(--s-3) 0 0; max-width: 36em; color: var(--stone); }
+@media (min-width: 960px) { .cta-inner { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); } }
+
+/* ---------- Header: email and WhatsApp in the mobile header (email first) ---------- */
+.header-actions { display: flex; align-items: center; gap: 2px; margin-inline-end: -10px; }
+.header-icon {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; color: inherit; border-radius: var(--radius);
+  transition: color .3s var(--ease);
+}
+.header-icon .icon { width: 23px; height: 23px; }
+.header-icon:hover { color: var(--bronze-ink); }
+.site-header.is-overlay:not(.is-solid) .header-icon:hover { color: var(--bronze-light); }
+.header-actions .menu-toggle { padding-inline: 8px 10px; }
+@media (min-width: 1024px) { .header-actions { display: none; } }
+@media (max-width: 374px) { .brand-logo { height: 34px; } .header-icon { width: 42px; } }
+
+/* Mobile menu: email, WhatsApp, telephone */
+.mobile-contact { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.mobile-contact li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; }
+.mobile-contact-label { min-width: 6.25rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-light); }
+
+/* ---------- Footer: address, navigation, contact ---------- */
+.footer-address { display: grid; align-content: start; gap: 2px; max-width: 22rem; font-size: var(--fs-small); line-height: 1.6; color: var(--stone); }
+.footer-address .footer-label { margin-bottom: 8px; }
+.footer-firm { color: var(--ivory); font-weight: 600; }
+.footer-contact { display: grid; gap: 6px; }
+.footer-contact li { display: grid; }
+.footer-label { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-light); line-height: 1.4; margin-top: 6px; }
+.footer-tels { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; color: var(--stone); }
+.footer-sep { color: var(--line-dark-strong); }
+@media (max-width: 599px) {
+  .footer-contact { display: grid; }
+}
+
+/* ---------- Cookie Settings: the register ---------- */
+.cookie-dialog-inner > p:first-of-type { margin-top: 12px; }
+.cookie-dialog-inner a { color: var(--ink); text-decoration-color: var(--bronze); }
+.register-title { margin: 28px 0 10px; font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-ink); }
+.register-empty { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 0.9375rem; color: var(--ink); }
+.cookie-dialog .preview-note { margin: 16px 0 0; }
+.cookie-dialog .cookie-actions { margin-top: 24px; }
+.cookie-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; line-height: 1.5; }
+.cookie-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cookie-table, .cookie-table tbody, .cookie-table tr, .cookie-table th, .cookie-table td { display: block; }
+.cookie-table tbody { border-top: 1px solid var(--line-strong); }
+.cookie-table tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.cookie-table tbody th { margin-bottom: 8px; text-align: start; }
+.cookie-table td { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 12px; padding-block: 2px; color: var(--ink-soft); }
+.cookie-table td::before { content: attr(data-label); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze-ink); padding-top: 0.2em; }
+.cookie-table code { font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 0.8125rem; font-weight: 600; color: var(--navy); background: var(--ivory); border: 1px solid var(--line); border-radius: var(--radius); padding: 2px 6px; }
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb { margin-bottom: clamp(24px, 3.5vw, 44px); }
+.breadcrumb a { opacity: 1; color: var(--ink-soft); }
+.breadcrumb a:hover { color: var(--navy); }
+
+/* ---------- Portraits ---------- */
+/* Placeholder initials until the photographs arrive: ≥ 3:1 on sand (large text) */
+.portrait-initials { color: #8B8275; }
+.portrait picture, .portrait picture img { display: block; width: 100%; height: 100%; object-fit: cover; }
