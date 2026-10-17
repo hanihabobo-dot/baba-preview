@@ -1,3 +1,4 @@
-# Staging build — do not index (review §11)
+# Preview build: not for indexing. The production build allows crawling and lists the sitemap:
+# Sitemap: https://babalawfirm.net/sitemap.xml
 User-agent: *
 Disallow: /
