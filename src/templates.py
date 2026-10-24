@@ -1354,8 +1354,12 @@ LOGIN_JS = r"""
   function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
   function bytes(h) { return new Uint8Array(h.match(/../g).map(function (x) { return parseInt(x, 16); })); }
   function next() {
-    var n = new URLSearchParams(location.search).get('next') || '';
-    return /^\/(?![\/\\])/.test(n) ? n : './';   /* paths on this site only */
+    /* Pages on this site only: resolve the target as the browser will (it drops tabs and newlines), then compare origins. */
+    try {
+      var u = new URL(new URLSearchParams(location.search).get('next') || './', location.href);
+      if (u.origin === location.origin) return u.pathname + u.search + u.hash;
+    } catch (e) {}
+    return './';
   }
   function fail(msg) {
     error.textContent = msg;
