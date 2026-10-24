@@ -39,10 +39,11 @@
   function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
   function bytes(h) { return new Uint8Array(h.match(/../g).map(function (x) { return parseInt(x, 16); })); }
   function next() {
-    /* Pages on this site only: resolve the target as the browser will (it drops tabs and newlines), then compare origins. */
+    /* Pages on this site only: resolve the target as the browser will (it drops tabs and newlines), compare
+       origins, and return the full URL; a bare path such as //host (from /.//host) would leave the site. */
     try {
       var u = new URL(new URLSearchParams(location.search).get('next') || './', location.href);
-      if (u.origin === location.origin) return u.pathname + u.search + u.hash;
+      if (u.origin === location.origin) return u.href;
     } catch (e) {}
     return './';
   }
