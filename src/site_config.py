@@ -29,13 +29,14 @@ PO_BOX_LINE = "P.O. Box 7777, Damascus"
 PO_BOX = "7777"
 
 # ---------------------------------------------------------------- map
-# Dr. Baba's notes: add the embedded map and "Get Directions" only after the exact
-# office location is verified. Set VERIFIED = True and the coordinates once the
-# firm sends its Google Maps link for the Al-Iskan Building.
+# Confirmed by the firm on 19 October (the Google Maps link in the Contact and Legal Pages
+# document: Baba Law Firm, Eskan Towers). That link is a directions link that also carries
+# the sender's own starting point, so only the office coordinates are used here; do not
+# copy the link itself into the repository.
 MAP = {
-    "VERIFIED": False,
-    "LAT": None,
-    "LNG": None,
+    "VERIFIED": True,
+    "LAT": 33.497052,
+    "LNG": 36.247348,
 }
 
 # ---------------------------------------------------------------- enquiry form
@@ -48,7 +49,12 @@ FORM_ENDPOINT = ""
 # "Do not publish a generic list of cookies that the website does not actually use").
 # Each entry: name, provider, purpose, category ("Strictly necessary", "Analytics", ...),
 # duration. Optional categories get a toggle in Cookie Settings and switch the banner on.
-COOKIE_REGISTER = []
+# The consent record (assets/js/site.js) is listed now; the scan adds what Google Maps sets.
+COOKIE_REGISTER = [
+    {"name": "blf-consent-v2", "provider": "Baba Law Firm",
+     "purpose": "Records your choices in Cookie Settings (kept in your browser's local storage)",
+     "category": "Strictly necessary", "duration": "Until you clear your browser's storage"},
+]
 OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "description": "..."}]
 
 # ---------------------------------------------------------------- photographs
@@ -75,6 +81,7 @@ CAPABILITIES = [
     ("corporate-commercial", "Corporate & Commercial"),
     ("mergers-acquisitions", "Mergers, Acquisitions & Restructuring"),
     ("foreign-investment", "Foreign Investment & Market Entry"),
+    ("market-feasibility-studies", "Market & Feasibility Studies"),
     ("banking-finance", "Banking & Finance"),
     ("regulatory-compliance-sanctions", "Regulatory Compliance & Sanctions"),
     ("arbitration-dispute-resolution", "Arbitration & Dispute Resolution"),
@@ -86,6 +93,20 @@ CAPABILITIES = [
     ("tax-customs", "Tax & Customs"),
     ("government-public-procurement", "Regulatory, Government & Public Procurement"),
     ("administrative-law-council-of-state", "Administrative Law & Council of State Proceedings"),
+]
+# The Capabilities index groups the pages under four headings (Dr. Baba's notes of 19 October),
+# with links to the groups at the top of the page.
+CAPABILITY_GROUPS = [
+    ("Establishing & Managing a Business",
+     ["company-formation", "corporate-governance", "corporate-commercial", "employment"]),
+    ("Investment, Finance & Transactions",
+     ["market-feasibility-studies", "mergers-acquisitions", "foreign-investment", "banking-finance", "tax-customs"]),
+    ("Regulation, Technology & Public Authorities",
+     ["regulatory-compliance-sanctions", "intellectual-property-data-protection", "technology-fintech",
+      "government-public-procurement"]),
+    ("Projects, Property & Dispute Resolution",
+     ["projects-construction-infrastructure", "real-estate-development", "arbitration-dispute-resolution",
+      "administrative-law-council-of-state"]),
 ]
 INDUSTRIES = [
     ("banking-financial-services", "Banking & Financial Services"),

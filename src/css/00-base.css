@@ -109,7 +109,7 @@ main:focus { outline: none; }
 /* ---------- Focus ---------- */
 :focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; }
 .on-dark :focus-visible, .section--navy :focus-visible, .page-hero--navy :focus-visible,
-.site-footer :focus-visible, .mobile-menu :focus-visible, .hero :focus-visible, .cta-band--navy :focus-visible,
+.site-footer :focus-visible, .mobile-menu :focus-visible, .hero :focus-visible, .cta-band--navy :focus-visible, .contact-map :focus-visible,
 .site-header.is-overlay:not(.is-solid) :focus-visible { outline-color: var(--bronze-light); }
 
 .skip-link {

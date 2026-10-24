@@ -4,7 +4,8 @@ The pages in the repository root are generated. Edit the files in `src/` and reb
 
 ```
 python3 src/build.py               # preview build (what GitHub Pages serves): noindex, preview notes
-python3 src/build.py --production  # launch build: indexable, robots.txt lists the sitemap, no preview notes
+python3 src/build.py --production  # launch build: indexable, robots.txt lists the sitemap, no preview notes, no login
+python3 src/build.py --set-password  # set or change the preview password, then build the preview
 ```
 
 Python 3.9+ only; no other dependencies.
@@ -15,15 +16,15 @@ Python 3.9+ only; no other dependencies.
 |---|---|
 | Approved copy, one file per page | `src/content/**/*.txt` |
 | Titles and meta descriptions (Dr. Baba's tables) | `src/seo.json` |
-| Contact details, map pin, form endpoint, cookie register, photographs, portraits | `src/site_config.py` |
+| Contact details, map pin, form endpoint, cookie register, photographs, portraits, capability groups | `src/site_config.py` |
 | Page layouts | `src/templates.py` |
 | Styles (concatenated into `assets/css/site.css`) | `src/css/*.css` |
 | Behaviour (menu, consent, form, map) | `assets/js/site.js` |
 
 ### Content files
 
-The wording is the approved copy of 16 October 2026, word for word. The format mirrors the
-client's document:
+The wording is the approved copy of 19 October 2026 ("Website Content – Reviewed Final Versions" and
+"Contact and Legal Pages"), word for word. The format mirrors the client's document:
 
 ```
 # Page title
@@ -52,14 +53,22 @@ to the new pages (`LEGACY_REDIRECTS` in `site_config.py`).
 
 - **Domain**: confirm `babalawfirm.net` (`DOMAIN` in `site_config.py`); HTTPS only, with http:// and
   www/non-www redirected (301) to the canonical form.
-- **Staging**: GitHub Pages cannot require a login. The notes ask for the staging site behind
-  authentication until launch (e.g. Cloudflare Pages with Cloudflare Access).
+- **Staging**: the preview asks for a password (`login.html`; only a salted PBKDF2 hash is stored, in
+  `src/preview-login.json`). It keeps casual visitors out, but it is a browser-side check, not access
+  control: GitHub Pages cannot require a login, so the files stay public to anyone who requests them
+  directly, and the repository is public. For real authentication until launch, as the notes ask,
+  make the repository private and host the preview behind a login (e.g. Cloudflare Pages with
+  Cloudflare Access).
 - **Enquiry form**: set `FORM_ENDPOINT` to a handler that delivers to info@babalawfirm.net (and
   confirm the mailbox is active). Without it the form validates and shows the confirmation only.
-- **Map**: set `MAP["VERIFIED"]`, `LAT` and `LNG` once the firm confirms the pin for the Al-Iskan
-  Building. The map then loads only on request or with consent, with a "Get Directions" link.
+- **Map**: done. The firm confirmed the location on 19 October; `MAP` in `site_config.py` holds the
+  office coordinates. The map loads only on request or with consent, with a "Get Directions" link.
+  Because Google Maps is an optional technology, the consent banner is now shown, and the cookie scan
+  must cover what Google Maps sets once loaded.
 - **Cookies**: run a cookie scan of the configured site and fill `COOKIE_REGISTER` (name, provider,
-  purpose, category, duration). Add optional categories to `OPTIONAL_CATEGORIES`; the banner
+  purpose, category, duration). It already lists the consent record (`blf-consent-v2`, local storage);
+  until the scan adds what Google Maps sets, Cookie Settings shows a one-line Google Maps note (our
+  wording, for the client to approve). Add optional categories to `OPTIONAL_CATEGORIES`; the banner
   (Reject / Accept / Settings) appears automatically when there is at least one.
 - **Analytics and Search Console**: install a privacy-respecting analytics tool and submit
   `/sitemap.xml` in Google Search Console.
