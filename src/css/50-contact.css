@@ -98,6 +98,7 @@
 .contact-map-addr { margin: 0; font-family: var(--serif); font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); line-height: 1.4; color: var(--ivory); }
 .contact-map-note { margin: 0; max-width: 30em; font-size: 0.8125rem; line-height: 1.6; color: var(--stone); }
 .contact-map-note a { color: var(--ivory); text-decoration-color: var(--bronze-light); }
+html:not(.js) [data-map-load], html:not(.js) .contact-map-note { display: none; }   /* the map needs site.js; Get Directions still works */
 .map-directions { margin: 14px 0 0; }
 .map-directions .ext { width: 17px; height: 17px; color: var(--bronze); }
 
