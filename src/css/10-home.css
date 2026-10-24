@@ -1,0 +1,123 @@
+/* ==========================================================================
+   Home — the photographic page family
+   Hero photograph · facts strip · arched photograph · stages · navy band ·
+   industries index · people · centred closing block
+   ========================================================================== */
+
+/* ---------- Hero ---------- */
+/* The city stays visible at the top; the band behind the text is dark enough for ≥ 4.5:1 over street lights. */
+.page-home .hero-media::after {
+  background: linear-gradient(to top, rgba(16, 28, 44, 0.86) 0%, rgba(16, 28, 44, 0.72) 42%, rgba(16, 28, 44, 0.46) 74%, rgba(16, 28, 44, 0.4) 100%);
+}
+@media (max-width: 719px) {
+  .page-home .hero-media { inset: -18% 0 0; }
+  .page-home .hero-media::after { background: linear-gradient(to top, rgba(16, 28, 44, 0.9) 0%, rgba(16, 28, 44, 0.78) 58%, rgba(16, 28, 44, 0.46) 100%); }
+}
+.page-home .hero { min-height: max(640px, min(100svh, 960px)); }
+.hero-title { max-width: none; }
+.hero-sub {
+  display: grid; gap: var(--s-4); margin-top: clamp(32px, 4vw, 56px); padding-top: clamp(24px, 3vw, 32px);
+  border-top: 1px solid rgba(245, 242, 236, 0.26);
+}
+.hero-intro { max-width: 40em; }
+.hero-intro p { color: rgba(245, 242, 236, 0.9); font-size: var(--fs-lead); line-height: 1.6; text-wrap: pretty; }
+.hero-intro p + p { margin-top: 0.9em; color: rgba(245, 242, 236, 0.78); font-size: var(--fs-body); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+@media (max-width: 479px) {
+  .page-home .hero-title { font-size: min(2.625rem, 10.4vw); }
+  .hero-actions .btn { width: 100%; justify-content: space-between; }
+}
+@media (min-width: 1100px) {
+  .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--s-6); }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { justify-content: space-between; }
+}
+
+/* ---------- At a Glance: four facts on one ruled line ---------- */
+.home-glance { padding-block: clamp(64px, 8vw, 112px); }
+.glance-head { display: grid; gap: var(--s-2); margin-bottom: clamp(32px, 4vw, 56px); }
+.glance-head .sec-tagline { margin: 0; }
+@media (min-width: 960px) {
+  .glance-head { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--col-gap); align-items: baseline; }
+  .glance-head .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); align-self: start; }
+}
+@media (min-width: 960px) and (max-width: 1199px) { .glance-head { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); } }
+.glance { display: grid; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.glance-item { display: grid; align-content: start; gap: 10px; padding: 24px 0 26px; border-bottom: 1px solid var(--line); }
+.glance-term { font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); line-height: 1.12; color: var(--navy); text-wrap: balance; }
+.glance-desc { font-size: var(--fs-small); line-height: 1.6; color: var(--ink-soft); max-width: 22em; text-wrap: pretty; }
+@media (min-width: 640px) {
+  .glance { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .glance-item { padding-inline: 0 clamp(20px, 2.4vw, 36px); }
+  .glance-item:nth-child(even) { padding-inline-start: clamp(20px, 2.4vw, 36px); border-inline-start: 1px solid var(--line); }
+}
+@media (min-width: 1100px) {
+  .glance { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .glance-item { border-bottom: 0; padding-block: 28px 8px; }
+  .glance-item + .glance-item { padding-inline-start: clamp(20px, 2.4vw, 36px); border-inline-start: 1px solid var(--line); }
+}
+
+/* ---------- A Market Opening to Investment: the arched photograph opposite the text ---------- */
+.home-split { display: grid; gap: var(--s-5) var(--col-gap); align-items: center; }
+.home-split-media { margin: 0; }
+.arch-crop { aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px 0 0; background: var(--sand); }
+.arch-crop img { width: 100%; height: 100%; object-fit: cover; }
+.home-split-text .sec-tagline { max-width: 16em; }
+.home-split-text .prose { max-width: 36em; }
+@media (min-width: 960px) {
+  .home-split { grid-template-columns: minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr); }
+  .home-split-media { grid-column: 1; max-width: 420px; }
+  .home-split-text { grid-column: 3; }
+}
+@media (min-width: 600px) and (max-width: 959px) { .home-split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+@media (max-width: 599px) { .home-split-media { width: min(60%, 240px); } }
+
+/* ---------- How We Help: four stages ---------- */
+.stage { display: grid; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.stage-item { display: grid; align-content: start; grid-template-columns: 2.75rem minmax(0, 1fr); gap: 6px 12px; padding: 24px 0 26px; border-bottom: 1px solid var(--line); }
+.stage-num { grid-row: span 2; font-family: var(--serif); font-style: italic; font-size: 1.125rem; line-height: 1.5; color: var(--bronze-ink); }
+.stage-name { font-family: var(--serif); font-weight: 600; font-size: clamp(1.375rem, 1.24rem + 0.45vw, 1.625rem); line-height: 1.2; color: var(--navy); }
+.stage-desc { color: var(--ink-soft); line-height: 1.6; max-width: 32em; text-wrap: pretty; }
+@media (min-width: 720px) {
+  .stage { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+}
+
+/* ---------- Why Baba Law Firm: the navy band ---------- */
+.home-why .sec-tagline { color: var(--ivory); }
+.why { display: grid; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-dark-strong); }
+.why-item { display: grid; align-content: start; gap: 10px; padding: 26px 0 28px; border-bottom: 1px solid var(--line-dark); }
+.why-name { font-family: var(--serif); font-weight: 600; font-size: clamp(1.375rem, 1.24rem + 0.45vw, 1.625rem); line-height: 1.2; color: var(--ivory); }
+.why-desc { color: var(--stone); line-height: 1.62; max-width: 34em; text-wrap: pretty; }
+@media (min-width: 720px) {
+  .why { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+}
+
+/* ---------- Industries We Serve: the index of eleven sectors ---------- */
+.home-industries .prose { max-width: 40em; margin-bottom: var(--s-4); }
+.ind-links { display: grid; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.ind-links li { border-bottom: 1px solid var(--line); }
+.ind-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 12px 0;
+  font-family: var(--serif); font-size: clamp(1.1875rem, 1.12rem + 0.3vw, 1.3125rem); font-weight: 600; line-height: 1.25;
+  color: var(--navy); text-decoration: none; transition: color .3s var(--ease);
+}
+.ind-link > span { text-wrap: balance; }
+.ind-link .arrow { width: 20px; height: 20px; flex: none; color: var(--bronze); transition: transform .35s var(--ease); }
+.ind-link:hover { color: var(--bronze-ink); }
+.ind-link:hover .arrow { transform: translateX(4px); }
+@media (min-width: 720px) { .ind-links { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); } }
+
+/* ---------- Our People ---------- */
+.home-people-grid { display: grid; gap: var(--s-3) var(--col-gap); align-items: start; }
+.home-people-head .sec-tagline { margin-bottom: 0; max-width: 14em; }
+.home-people-text .prose { max-width: 38em; }
+@media (min-width: 960px) {
+  .home-people-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .home-people-text { padding-top: 40px; }
+}
+
+/* ---------- Contact: the centred closing block ---------- */
+.home-contact-centre { max-width: 48rem; text-align: center; }
+.home-contact-centre .sec-tagline { margin-inline: auto; margin-bottom: 0; }
+.home-contact-centre .lead { margin: var(--s-3) auto 0; max-width: 36em; }
+.home-contact-centre .actions { justify-content: center; }

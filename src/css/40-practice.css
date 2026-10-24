@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Capabilities and Industries — the typographic page family
+   Index pages · capability pages · industry pages · HTML sitemap
+   ========================================================================== */
+
+/* ---------- Hero: breadcrumb, title, tagline, introduction ---------- */
+.practice-hero { padding-block: clamp(40px, 6vw, 96px) clamp(56px, 7vw, 104px); }
+.practice-hero .page-title { max-width: 20ch; }
+.practice-intro { max-width: 46rem; }
+.practice-intro .lead { font-size: var(--fs-lead); }
+@media (min-width: 960px) {
+  .practice-hero .container { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--col-gap); }
+  .practice-hero .container > * { grid-column: 2; }
+  .practice-hero .breadcrumb { grid-column: 1 / -1; }
+}
+@media (min-width: 960px) and (max-width: 1199px) { .practice-hero .container { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); } }
+
+/* ---------- Body ---------- */
+.practice-body { padding-block: clamp(64px, 8vw, 120px); }
+
+/* ---------- Index pages: Capabilities, Industries ---------- */
+.index-page { padding-block: clamp(40px, 6vw, 96px) var(--section); }
+.index-page .page-title { margin-bottom: clamp(32px, 4.5vw, 64px); }
+.cap-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.cap-row {
+  position: relative; display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) 28px; gap: 6px 16px; align-items: baseline;
+  padding: clamp(22px, 2.6vw, 32px) 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--navy);
+}
+.cap-row::before { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--bronze); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
+.cap-row:hover::before, .cap-row:focus-visible::before { transform: scaleX(1); }
+.cap-row-num { font-family: var(--serif); font-style: italic; color: var(--bronze-ink); font-size: 1.125rem; }
+.cap-row-title { font-family: var(--serif); font-weight: 500; font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.25rem); line-height: 1.12; text-wrap: balance; transition: color .3s var(--ease); }
+.cap-row-desc { grid-column: 2; margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(1.125rem, 1.06rem + 0.25vw, 1.25rem); line-height: 1.4; color: var(--ink-soft); max-width: 30em; }
+.cap-row-arrow { grid-column: 3; grid-row: 1; align-self: center; display: inline-flex; color: var(--bronze); }
+.cap-row-arrow .arrow { width: 26px; height: 26px; transition: transform .4s var(--ease); }
+.cap-row:hover .cap-row-arrow .arrow { transform: translateX(6px); }
+.cap-row:hover .cap-row-title { color: var(--bronze-ink); }
+@media (min-width: 960px) {
+  .cap-row { grid-template-columns: 4rem minmax(0, 6fr) minmax(0, 5fr) auto; align-items: center; }
+  .cap-row-desc { grid-column: 3; grid-row: 1; }
+  .cap-row-arrow { grid-column: 4; }
+}
+
+/* ---------- HTML sitemap ---------- */
+.sitemap-grid { display: grid; gap: var(--s-6) var(--col-gap); }
+@media (min-width: 720px) { .sitemap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1200px) { .sitemap-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.sitemap-group .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
+.sitemap-list { list-style: none; margin: 0; padding: 0; }
+.sitemap-list li { padding-block: 7px; line-height: 1.4; }
+.sitemap-list a { color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; line-height: 1.35; }
+.sitemap-list a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
