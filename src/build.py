@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """Build the Baba Law Firm website from src/ into the repository root.
 
-    python3 src/build.py               # preview build (GitHub Pages: noindex, preview notes)
-    python3 src/build.py --production  # production build (indexable, no preview notes)
+    python3 src/build.py                 # preview build (GitHub Pages: noindex, preview notes, login)
+    python3 src/build.py --production    # production build (indexable, no preview notes, no login)
+    python3 src/build.py --set-password  # set or change the preview password, then build the preview
 
 Content: src/content/*.txt (the approved copy, word for word)
 SEO:     src/seo.json (titles and descriptions from Dr. Baba's tables)
 Styles:  src/css/*.css, concatenated into assets/css/site.css
+Login:   src/preview-login.json (the preview password as a salted PBKDF2 hash, never the password)
 """
+import getpass
+import hashlib
 import json
+import secrets
 import shutil
 import sys
 from pathlib import Path
@@ -22,6 +27,15 @@ import templates as T                                     # noqa: E402
 from markup import parse                                  # noqa: E402
 
 SEO = json.loads((SRC / "seo.json").read_text(encoding="utf-8"))
+LOGIN = SRC / "preview-login.json"
+
+
+def set_password(password, iterations=600_000):
+    """Store the preview password as a salted PBKDF2-SHA256 hash (login.html checks it in the browser)."""
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+    LOGIN.write_text(json.dumps({"salt": salt.hex(), "iterations": iterations, "hash": digest.hex()}, indent=1) + "\n",
+                     encoding="utf-8")
 
 
 def registry():
@@ -83,7 +97,8 @@ OBSOLETE = ["people/tawfeeq-baba.html", "people/mohamad-baba.html", "people.html
 
 def build(production=False):
     pages = registry()
-    ctx = T.Ctx(pages, production)
+    login = json.loads(LOGIN.read_text(encoding="utf-8")) if LOGIN.exists() and not production else None
+    ctx = T.Ctx(pages, production, login)
     logo_defs = (SRC / "partials" / "logo-defs.svg").read_text(encoding="utf-8")
 
     for rel_path in OBSOLETE:
@@ -99,6 +114,12 @@ def build(production=False):
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")
         written.append(page["out"])
+
+    # Preview login (the production build has none).
+    if login:
+        (ROOT / "login.html").write_text(T.login_page(ctx, logo_defs), encoding="utf-8")
+    else:
+        (ROOT / "login.html").unlink(missing_ok=True)
 
     # Old preview addresses keep working (preview only; they never existed on the production domain).
     for old, new in (C.LEGACY_REDIRECTS.items() if not production else []):
@@ -127,9 +148,16 @@ def build(production=False):
     (ROOT / "assets" / "css" / "site.css").write_text(css, encoding="utf-8")
 
     print(f"Built {len(written)} pages, {0 if production else len(C.LEGACY_REDIRECTS)} redirects, {len(urls)} sitemap URLs "
-          f"({'production' if production else 'preview'}).")
+          f"({'production' if production else 'preview'}{', login' if login else ''}).")
+    if not production and not login:
+        print("Warning: src/preview-login.json is missing, so the preview has no login (python3 src/build.py --set-password).")
     return pages
 
 
 if __name__ == "__main__":
+    if "--set-password" in sys.argv:
+        password = getpass.getpass("New preview password: ")
+        if not password or password != getpass.getpass("Repeat it: "):
+            sys.exit("The passwords are empty or do not match; nothing was changed.")
+        set_password(password)
     build(production="--production" in sys.argv)

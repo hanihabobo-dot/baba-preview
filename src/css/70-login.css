@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Preview login (login.html, preview build only)
+   ========================================================================== */
+.login { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 48px 16px; background: var(--sand); }
+.login-card { width: 100%; max-width: 420px; padding: clamp(28px, 5vw, 44px); background: var(--ivory); border: 1px solid var(--line); border-radius: var(--radius); }
+.login-logo { height: 48px; margin-bottom: 32px; color: var(--navy); }
+.login-title { margin: 0 0 10px; }
+.login-text { margin: 0 0 24px; font-size: var(--fs-small); color: var(--ink-soft); }
+.login-form { display: grid; gap: 20px; }
+.login-form .btn { justify-self: start; }
+.login-form .btn:disabled { opacity: .6; cursor: progress; }

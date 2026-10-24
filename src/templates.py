@@ -51,10 +51,11 @@ def depth(href):
 class Ctx:
     """Build context: the page registry, the parsed documents and the build mode."""
 
-    def __init__(self, pages, production):
+    def __init__(self, pages, production, login=None):
         self.pages = pages                    # key -> page dict
         self.production = production
         self.preview = not production
+        self.login = login                    # preview password hash (src/preview-login.json), or None
         self.by_href = {p["href"]: p for p in pages.values()}
         self.cap_by_title = {t: s for s, t in C.CAPABILITIES}
         self.ind_by_title = {t: s for s, t in C.INDUSTRIES}
@@ -63,6 +64,8 @@ class Ctx:
             self.optional.append({
                 "key": "maps", "name": "Maps",
                 "description": "Google Maps on the Contact page. When allowed, the map loads automatically; otherwise it loads only when you choose to load it.",
+                # Shown under the register until the cookie scan lists what Google sets (our wording).
+                "register_note": "Google Maps (optional): when the map on the Contact page loads, Google may set cookies of its own.",
             })
 
 
@@ -616,23 +619,48 @@ def render_index(ctx, page):
     kind = page["type"]            # cap-index | ind-index
     items = C.CAPABILITIES if kind == "cap-index" else C.INDUSTRIES
     folder = "capabilities/" if kind == "cap-index" else "industries/"
-    rows = []
-    for i, (slug, title) in enumerate(items, 1):
+    titles = dict(items)
+
+    def row(i, slug, tag):
         doc = ctx.pages[folder + slug]["doc"]
-        rows.append(f'''
+        return f'''
       <li><a class="cap-row" href="{esc(rel(page["href"], folder + slug))}">
         <span class="cap-row-num" aria-hidden="true">{i:02d}</span>
-        <h2 class="cap-row-title">{esc(title)}</h2>
+        <{tag} class="cap-row-title">{esc(titles[slug])}</{tag}>
         <p class="cap-row-desc">{inline(doc.tagline)}</p>
         <span class="cap-row-arrow">{ARROW}</span>
-      </a></li>''')
+      </a></li>'''
+
+    if kind == "ind-index":
+        rows = "".join(row(i, slug, "h2") for i, (slug, _) in enumerate(items, 1))
+        body = f'''
+    <ol class="cap-rows" role="list">{rows}
+    </ol>'''
+    else:
+        # Capabilities: four groups, each page exactly once, with links to the groups at the top.
+        grouped = [s for _, slugs in C.CAPABILITY_GROUPS for s in slugs]
+        if sorted(grouped) != sorted(titles):
+            raise ValueError("CAPABILITY_GROUPS must list every capability exactly once")
+        jump = "".join(f'<li><a class="chip" href="#{slugify(g)}">{esc(g)}</a></li>' for g, _ in C.CAPABILITY_GROUPS)
+        groups, n = [], 0
+        for g, slugs in C.CAPABILITY_GROUPS:
+            rows = "".join(row(n + i, slug, "h3") for i, slug in enumerate(slugs, 1))
+            n += len(slugs)
+            groups.append(f'''
+    <section class="cap-group" aria-labelledby="{slugify(g)}">
+      <h2 class="label sec-label cap-group-title" id="{slugify(g)}">{esc(g)}</h2>
+      <ol class="cap-rows" role="list">{rows}
+      </ol>
+    </section>''')
+        body = f'''
+    <nav class="chips cap-jump" aria-label="Capability groups">
+      <ul role="list">{jump}</ul>
+    </nav>{"".join(groups)}'''
     return f'''
 <section class="index-page" aria-labelledby="page-title">
   <div class="container">
     {breadcrumb_html(page)}
-    <h1 class="h1 page-title" id="page-title">{esc(page["h1"])}</h1>
-    <ol class="cap-rows" role="list">{"".join(rows)}
-    </ol>
+    <h1 class="h1 page-title" id="page-title">{esc(page["h1"])}</h1>{body}
   </div>
 </section>'''
 
@@ -1205,8 +1233,13 @@ def cookie_ui(ctx, page):
         <thead><tr><th scope="col">Name</th><th scope="col">Provider</th><th scope="col">Purpose</th><th scope="col">Category</th><th scope="col">Duration</th></tr></thead>
         <tbody>{trs}</tbody>
       </table></div>'''
-    else:
+    elif not opt:
         register = '<p class="register-empty">This website currently sets no cookies and uses no similar technologies.</p>'
+    else:
+        register = ""
+    listed = {c["category"] for c in C.COOKIE_REGISTER}
+    register += "".join(f'<p class="register-note">{esc(o["register_note"])}</p>'
+                        for o in opt if o.get("register_note") and o["name"] not in listed)
     if ctx.preview:
         register += ('<p class="preview-note">Preview: before launch, this register is completed from a cookie scan of the configured live website, '
                      'listing each cookie or similar technology with its provider, purpose, category and duration.</p>')
@@ -1259,12 +1292,19 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
     desc = esc(seo["description"])
     ld = "" if is404 else jsonld(ctx, page)
     opt_keys = ",".join(o["key"] for o in ctx.optional)
+    gate = ""
+    if ctx.login:
+        # Preview login: the page stays hidden until the password has been entered on this device.
+        to = C.PREVIEW_BASE_PATH + "login" if is404 else rel(h, "login")
+        gate = (f"<script>try{{if(localStorage.getItem('blf-preview')!=='{ctx.login['hash']}')throw 0}}catch(e){{"
+                f"document.documentElement.style.display='none';"
+                f"location.replace('{to}?next='+encodeURIComponent(location.pathname+location.search+location.hash))}}</script>\n")
     return f'''<!doctype html>
 <html lang="{C.LANG}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{base}<title>{title}</title>
+{base}{gate}<title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="robots" content="{robots}">
 {canon}<meta property="og:type" content="{"profile" if page["type"] == "profile" else "website"}">
@@ -1298,6 +1338,88 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 {footer(ctx, page)}
 {cookie_ui(ctx, page)}
 <script src="{a('assets/js/site.js')}" defer></script>
+</body>
+</html>
+'''
+
+
+LOGIN_JS = r"""
+(function () {
+  var form = document.querySelector('[data-login]');
+  var input = form.querySelector('input');
+  var field = input.closest('.field');
+  var error = document.getElementById('login-error');
+  var button = form.querySelector('button');
+  var KEY = 'blf-preview';
+  function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+  function bytes(h) { return new Uint8Array(h.match(/../g).map(function (x) { return parseInt(x, 16); })); }
+  function next() {
+    var n = new URLSearchParams(location.search).get('next') || '';
+    return /^\/(?![\/\\])/.test(n) ? n : './';   /* paths on this site only */
+  }
+  function fail(msg) {
+    error.textContent = msg;
+    field.classList.add('is-invalid');
+    input.setAttribute('aria-invalid', 'true');
+    button.disabled = false;
+    input.focus();
+    input.select();
+  }
+  try { if (localStorage.getItem(KEY) === form.dataset.hash) location.replace(next()); } catch (e) {}
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!input.value) return fail('Please enter the password.');
+    if (!window.crypto || !crypto.subtle) return fail('This browser cannot check the password. Please use an up-to-date browser.');
+    button.disabled = true;
+    crypto.subtle.importKey('raw', new TextEncoder().encode(input.value), 'PBKDF2', false, ['deriveBits'])
+      .then(function (key) {
+        return crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: bytes(form.dataset.salt), iterations: +form.dataset.iterations }, key, 256);
+      })
+      .then(function (bits) {
+        if (hex(bits) !== form.dataset.hash) return fail('That password is not correct.');
+        try { localStorage.setItem(KEY, form.dataset.hash); } catch (x) {
+          return fail('Your browser blocks storage for this site, so the preview cannot stay open. Please allow it and try again.');
+        }
+        location.replace(next());
+      }, function () { fail('The password could not be checked. Please try again.'); });
+  });
+})();
+"""
+
+
+def login_page(ctx, logo_defs):
+    """Preview only: asks for the password whose salted hash is in src/preview-login.json."""
+    L = ctx.login
+    return f'''<!doctype html>
+<html lang="{C.LANG}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview Login | Baba Law Firm</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#101C2C">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body class="page-login">
+{logo_defs}
+<main id="main" class="login">
+  <div class="login-card">
+    <svg class="brand-logo login-logo" viewBox="0 0 1230 314" role="img" aria-label="Baba Law Firm"><use href="#baba-logo"/></svg>
+    <h1 class="h3 login-title">Website Preview</h1>
+    <p class="login-text">This preview is shared for review before launch. Please enter the password you were given.</p>
+    <form class="login-form" data-login data-salt="{esc(L["salt"])}" data-iterations="{int(L["iterations"])}" data-hash="{esc(L["hash"])}" novalidate>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input class="input" type="password" id="login-password" name="password" autocomplete="current-password" required aria-describedby="login-error">
+        <p class="field-error" id="login-error" role="alert"></p>
+      </div>
+      <button type="submit" class="btn btn--primary"><span>Enter</span></button>
+    </form>
+  </div>
+</main>
+<script>{LOGIN_JS}</script>
 </body>
 </html>
 '''

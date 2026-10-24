@@ -49,6 +49,11 @@
   "title": "Foreign Investment & Market Entry in Syria | Baba Law Firm",
   "description": "Advice for foreign investors entering Syria: Investment Law No. 18 of 2021, market entry structures, branches, commercial agents, licences and guarantees."
  },
+ "/capabilities/market-feasibility-studies": {
+  "page": "Market & Feasibility Studies",
+  "title": "Market & Feasibility Studies in Syria | Baba Law Firm",
+  "description": "Market studies, feasibility studies and investment potential assessments for projects in Syria, combining commercial, financial and legal analysis."
+ },
  "/capabilities/banking-finance": {
   "page": "Banking & Finance",
   "title": "Banking & Finance Law in Syria | Baba Law Firm",
@@ -187,7 +192,7 @@
  "/capabilities": {
   "page": "Capabilities",
   "title": "Capabilities | Baba Law Firm",
-  "description": "The sixteen capabilities of Baba Law Firm in Syria, from company formation and foreign investment to banking, arbitration and administrative law.",
+  "description": "The seventeen capabilities of Baba Law Firm in Syria, from company formation and foreign investment to banking, arbitration and administrative law.",
   "unapproved": true
  },
  "/industries": {
