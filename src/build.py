@@ -89,7 +89,8 @@ RENDER = {
     "legal": T.render_legal, "sitemap": T.render_sitemap, "404": T.render_404,
 }
 
-# Files from the earlier preview that this build no longer produces (replaced by redirects).
+# Files from the earlier preview that this build no longer produces (replaced by redirects; capabilities.html
+# and industries.html must not exist at all, see LEGACY_404_REDIRECTS).
 OBSOLETE = ["people/tawfeeq-baba.html", "people/mohamad-baba.html", "people.html", "capabilities.html", "industries.html",
             "capabilities/foreign-investment-market-entry.html", "capabilities/regulatory-government-public-procurement.html",
             "assets/img/lattice.svg"]
@@ -122,10 +123,11 @@ def build(production=False):
         (ROOT / "login.html").unlink(missing_ok=True)
 
     # Old preview addresses keep working (preview only; they never existed on the production domain).
+    # Root-absolute targets: a relative one doubles the path when the stub is reached at an address ending in "/".
     for old, new in (C.LEGACY_REDIRECTS.items() if not production else []):
         out = ROOT / old
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(T.redirect_stub(T.rel(old.replace(".html", ""), new), T.canonical(new)), encoding="utf-8")
+        out.write_text(T.redirect_stub(C.PREVIEW_BASE_PATH + new, T.canonical(new)), encoding="utf-8")
 
     # XML sitemap: every public page at its canonical HTTPS URL (no 404, no redirects).
     urls = [T.canonical(p["href"]) for p in pages.values() if p["type"] != "404"]

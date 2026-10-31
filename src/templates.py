@@ -7,6 +7,7 @@ All wording comes from src/content/ (the approved copy); this module adds markup
 import html
 import json
 import re
+from pathlib import Path
 
 import site_config as C
 from markup import inline, plain, strip_arrow, split_lead, split_bold_lead, nowrap
@@ -84,20 +85,31 @@ def canonical(href):
 
 # ---------------------------------------------------------------- media
 
-def photo_url(key, w):
-    kind, pid = C.PHOTOS[key]["src"]
-    tpl = C.UNSPLASH if kind == "unsplash" else C.PEXELS
-    return tpl.format(id=pid, w=w)
+def photo_widths(key):
+    """Widths of the files {key}-{w}.jpg in C.PHOTO_DIR, ascending; each width must also have an .avif and a .webp."""
+    folder = Path(__file__).resolve().parent.parent / C.PHOTO_DIR
+    ws = sorted(int(f.stem.rsplit("-", 1)[1]) for f in folder.glob(f"{key}-[0-9]*.jpg"))
+    if not ws:
+        raise SystemExit(f"No files for photograph '{key}' in {C.PHOTO_DIR}")
+    missing = [f"{key}-{w}.{ext}" for w in ws for ext in ("avif", "webp") if not (folder / f"{key}-{w}.{ext}").is_file()]
+    if missing:
+        raise SystemExit(f"Missing in {C.PHOTO_DIR}: {', '.join(missing)}")
+    return ws
 
 
-def img(key, sizes, eager=False, cls=""):
+def img(key, sizes, frm, eager=False, cls=""):
+    """A self-hosted photograph as seen from the page `frm`: AVIF and WebP sources with a JPEG fallback."""
     p = C.PHOTOS[key]
-    widths = [640, 960, 1280, 1600, 2000, 2400]
-    srcset = ", ".join(f"{photo_url(key, w)} {w}w" for w in widths)
+    widths = photo_widths(key)
+    base = rel(frm, f"{C.PHOTO_DIR}/{key}")
+    srcset = lambda ext: esc(", ".join(f"{base}-{w}.{ext} {w}w" for w in widths))
+    fallback = max([w for w in widths if w <= 1600] or widths[:1])
     load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     c = f' class="{cls}"' if cls else ""
-    return (f'<img{c} src="{esc(photo_url(key, 1600))}" srcset="{esc(srcset)}" sizes="{sizes}" '
-            f'alt="{esc(p["alt"])}" {load} decoding="async" style="object-position:{p["pos"]}">')
+    return (f'<picture><source type="image/avif" srcset="{srcset("avif")}" sizes="{sizes}">'
+            f'<source type="image/webp" srcset="{srcset("webp")}" sizes="{sizes}">'
+            f'<img{c} src="{esc(f"{base}-{fallback}.jpg")}" srcset="{srcset("jpg")}" sizes="{sizes}" '
+            f'alt="{esc(p["alt"])}" {load} decoding="async" style="object-position:{p["pos"]}"></picture>')
 
 
 def portrait(slug, name, frm, role=""):
@@ -135,6 +147,12 @@ def email_links(text):
         if addr in text:
             links[addr] = f'<a href="mailto:{addr}">{addr}</a>'
     return links
+
+
+def enquiry_mail_links(text):
+    """Every address in `text` as a link with the enquiry subject of C.EMAIL_HREF (a personal address too)."""
+    return {m: f'<a href="{esc(C.EMAIL_HREF.replace(C.EMAIL, m))}">{m}</a>'
+            for m in re.findall(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+", text)} or None
 
 
 def para(text, links=None, cls=""):
@@ -259,7 +277,7 @@ def render_home(ctx, page):
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("hero", "100vw", eager=True)}</div>
+  <div class="hero-media">{img("hero", "100vw", h, eager=True)}</div>
   <div class="container hero-content">
     <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
     <div class="hero-sub">
@@ -288,7 +306,7 @@ def render_home(ctx, page):
     market = f'''
 <section class="section home-market" aria-labelledby="market-title">
   <div class="container home-split">
-    <figure class="home-split-media arch-crop reveal">{img("window", "(min-width: 960px) 34vw, 220px")}</figure>
+    <figure class="home-split-media arch-crop reveal">{img("window", "(min-width: 960px) 34vw, 220px", h)}</figure>
     <div class="home-split-text reveal">
       <h2 class="label sec-label" id="market-title">{esc(s.heading)}</h2>
       <p class="sec-tagline">{inline(s.tagline)}</p>
@@ -387,7 +405,7 @@ def render_firm(ctx, page):
     heritage = f'''
 <section class="section section--white firm-heritage" aria-labelledby="our-heritage">
   <div class="container firm-story-grid">
-    <div class="firm-story-media reveal"><figure class="arch"><div class="arch-frame">{img("courtyard", "(min-width: 960px) 36vw, 90vw")}</div></figure></div>
+    <div class="firm-story-media reveal"><figure class="arch"><div class="arch-frame">{img("courtyard", "(min-width: 960px) 36vw, 90vw", h)}</div></figure></div>
     <div class="firm-story-text reveal">
       <h2 class="label sec-label" id="our-heritage">{esc(s.heading)}</h2>
       <p class="sec-tagline">{inline(s.tagline)}</p>
@@ -542,7 +560,10 @@ def render_profile(ctx, page):
   </div>
 </div>'''
     contact = d.section("Contact")
-    firm, place = [plain(x).strip() for x in contact.blocks[0].text.split(" \\\\ ")]
+    # **Baba Law Firm** \\ Damascus, Syria \\ Email: info@babalawfirm.net (the email line since 29 October;
+    # the notes allow a personal address instead, which is linked the same way)
+    firm, place, *more = [plain(x).strip() for x in contact.blocks[0].text.split(" \\\\ ")]
+    more_html = "".join(f'<p class="lead profile-contact-line">{inline(x, enquiry_mail_links(x))}</p>' for x in more)
     label = strip_arrow([b for b in contact.blocks if b.kind == "cta"][0].text)
     band = f'''
 <section class="section cta-band cta-band--navy profile-contact" aria-labelledby="contact-title">
@@ -550,7 +571,7 @@ def render_profile(ctx, page):
     <div class="cta-text">
       <h2 class="label sec-label" id="contact-title">{esc(contact.heading)}</h2>
       <p class="cta-statement">{esc(firm)}</p>
-      <p class="lead">{esc(place)}</p>
+      <p class="lead">{esc(place)}</p>{more_html}
     </div>
     <div class="cta-actions">{btn(rel(page["href"], CTA_TARGETS[label]), label, "btn--light")}</div>
   </div>
@@ -682,7 +703,7 @@ def render_contact(ctx, page):
         <li><a class="method" href="{esc(C.EMAIL_HREF)}">
           <span class="method-icon">{ICON_MAIL}</span>
           <span class="method-label">{esc(ctas[0])}</span>
-          <span class="method-value">{esc(plain(email_p.text))}</span>
+          <span class="method-value">{esc(plain(email_p.text)).replace("@", "@<wbr>")}</span>
           <span class="method-arrow">{ARROW}</span>
         </a></li>
         <li><a class="method" href="{esc(C.WHATSAPP_HREF)}" rel="noopener">
@@ -726,19 +747,24 @@ def render_contact(ctx, page):
 </section>'''
 
     enq = d.section("Send an Enquiry")
-    enq_ps = [b for b in enq.blocks if b.kind == "p"]
-    fields = [b for b in enq.blocks if b.kind == "ul"][0].items
+    # Blocks as supplied: introduction, the contact line (29 October), the fields, then the lines after the form
+    fields_at = next(i for i, b in enumerate(enq.blocks) if b.kind == "ul")
+    before = [b for b in enq.blocks[:fields_at] if b.kind == "p"]
+    fields = enq.blocks[fields_at].items
     form = enquiry_form(ctx, page, fields)
-    after = "".join(para(b.text, cls="form-after") for b in enq_ps[1:])
+    after = "".join(para(b.text, cls="form-after") for b in enq.blocks[fields_at:] if b.kind == "p")
+    quick = "".join("\n    " + contact_line(b.text) for b in before[1:])
+    # The caution of Get in Touch is repeated above the form, which now comes before it on the page.
     nxt = d.section("What Happens Next")
     steps = lead_items(nxt.blocks[0].items, "steps", "step-name", "step-desc", numbered=True, tag="ol")
     enquiry = f'''
 <section class="section enquiry" aria-label="{esc(enq.heading)}; {esc(nxt.heading)}">
-  <div class="container enquiry-grid">
+  <div class="container enquiry-grid">{quick}
     <section class="enquiry-main" aria-labelledby="send-an-enquiry">
       <h2 class="label sec-label" id="send-an-enquiry">{esc(enq.heading)}</h2>
       <p class="sec-tagline">{inline(enq.tagline)}</p>
-      {para(enq_ps[0].text, cls="enquiry-intro")}
+      {para(before[0].text, cls="enquiry-intro")}
+      {para(notice_p.text, cls="contact-caution")}
       {form}
       <div class="form-after-wrap">{after}</div>
     </section>
@@ -760,7 +786,7 @@ def render_contact(ctx, page):
     other_html = (f'<p class="other-line"><strong>{inline(oname)}</strong><span class="sep"> — </span>'
                   f'{inline(head)} <a class="inline-arrow" href="{esc(rel(h, "careers"))}">{esc(last)}{ARROW}</a></p>')
     visit_html = f'''
-<section class="section section--white visit" aria-labelledby="visit-our-office">
+<section class="section visit" aria-labelledby="visit-our-office">
   <div class="container visit-grid">
     <div class="visit-text">
       <h2 class="label sec-label" id="visit-our-office">{esc(visit.heading)}</h2>
@@ -774,7 +800,22 @@ def render_contact(ctx, page):
     <div class="visit-map">{map_block(ctx, page)}</div>
   </div>
 </section>'''
-    return hero + top + enquiry + visit_html
+    # The form first, under the heading (client notes of 29 October); then the other ways to reach the firm.
+    return hero + enquiry + top + visit_html
+
+
+def contact_line(text):
+    """'Telephone A | B · Email X · …' above the form: the numbers and the address as links.
+    A number that is not in C.PHONES stops the build, as in Contact Details."""
+    tels = dict(C.PHONES)
+    links = {n: f'<a href="tel:{tels[n]}">{n}</a>' for n in re.findall(r"\+\d[\d ]*\d", text)}
+    links.update(enquiry_mail_links(text) or {})
+    parts = []
+    for p in text.split(" · "):
+        p_html = inline(p, {k: v for k, v in links.items() if k in p} or None)
+        p_html = p_html.replace(" | ", '<span class="enquiry-quick-sep" aria-hidden="true"> | </span>')
+        parts.append(f'<span class="enquiry-quick-item">{p_html}</span>')
+    return '<p class="enquiry-quick">' + '<span class="enquiry-quick-dot" aria-hidden="true"> · </span>'.join(parts) + "</p>"
 
 
 def map_block(ctx, page):
@@ -795,7 +836,7 @@ def map_block(ctx, page):
             if ctx.preview else "")
     return f'''
       <div class="map-pending">
-        <div class="map-pending-media" aria-hidden="true">{img("skyline", "(min-width: 960px) 50vw, 100vw")}</div>
+        <div class="map-pending-media" aria-hidden="true">{img("skyline", "(min-width: 960px) 50vw, 100vw", page["href"])}</div>
         <div class="map-pending-text">
           <p class="map-pending-firm">Baba Law Firm</p>
           <p class="map-pending-addr">{nowrap(esc(C.ADDRESS_LINE))}</p>
@@ -872,7 +913,7 @@ def enquiry_form(ctx, page, fields):
         {success_note}
       </div>
       <div class="form-failure" id="enquiry-failure" tabindex="-1" hidden role="alert">
-        <p>Your enquiry could not be sent. Please email <a href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a> or call <a href="tel:{C.PHONES[0][1]}">{C.PHONES[0][0]}</a>.</p>
+        <p>Your enquiry could not be sent. Please email <a href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a> or call {tel_links("cred-sep")}.</p>
       </div>'''
 
 
@@ -1128,9 +1169,15 @@ def jsonld(ctx, page):
 
 # ---------------------------------------------------------------- page shell
 
+def tel_links(sep="footer-sep"):
+    """Both telephone numbers, 'A | B', as in the footer and the mobile menu (`sep`: the separator's class)."""
+    return f'<span class="{sep}" aria-hidden="true"> | </span>'.join(f'<a href="tel:{t}">{d}</a>' for d, t in C.PHONES)
+
+
 def header(ctx, page, overlay):
     h = page["href"]
-    cur = page.get("section_href")
+    # One item is current: the page itself when it is in the menu (Sanctions & Compliance), else its section.
+    cur = h if h in dict(C.PRIMARY_NAV) else page.get("section_href")
     def current(href):
         if href != cur:
             return ""
@@ -1140,7 +1187,6 @@ def header(ctx, page, overlay):
     home = rel(h, "")
     brand = (f'<a class="brand" href="{esc(home)}"><svg class="brand-logo" viewBox="0 0 1230 314" aria-hidden="true" focusable="false">'
              f'<use href="#baba-logo"/></svg><span class="visually-hidden">Baba Law Firm — home</span></a>')
-    phone = C.PHONES[0]
     return f'''
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header{' is-overlay' if overlay else ''}" data-header>
@@ -1166,7 +1212,7 @@ def header(ctx, page, overlay):
     <ul class="mobile-contact" role="list">
       <li><span class="mobile-contact-label">Email</span><a href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a></li>
       <li><span class="mobile-contact-label">WhatsApp</span><a href="{esc(C.WHATSAPP_HREF)}" rel="noopener">{C.WHATSAPP_DISPLAY}</a></li>
-      <li><span class="mobile-contact-label">Telephone</span><a href="tel:{phone[1]}">{phone[0]}</a></li>
+      <li><span class="mobile-contact-label">Telephone</span><span class="mobile-contact-tels">{tel_links()}</span></li>
     </ul>
   </div>
 </div>'''
@@ -1176,7 +1222,6 @@ def footer(ctx, page):
     h = page["href"]
     nav = "".join(f'<li><a href="{esc(rel(h, href))}">{esc(label)}</a></li>' for href, label in C.FOOTER_NAV)
     legal = "".join(f'<li><a href="{esc(rel(h, href))}">{esc(label)}</a></li>' for href, label in C.FOOTER_LEGAL)
-    tels = '<span class="footer-sep" aria-hidden="true"> | </span>'.join(f'<a href="tel:{t}">{d}</a>' for d, t in C.PHONES)
     return f'''
 <footer class="site-footer">
   <div class="ablaq-band" aria-hidden="true"></div>
@@ -1188,7 +1233,7 @@ def footer(ctx, page):
     <ul role="list" class="footer-contact">
       <li><span class="footer-label">Email</span><a href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a></li>
       <li><span class="footer-label">WhatsApp</span><a href="{esc(C.WHATSAPP_HREF)}" rel="noopener">{C.WHATSAPP_DISPLAY}</a></li>
-      <li><span class="footer-label">Telephone</span><span class="footer-tels">{tels}</span></li>
+      <li><span class="footer-label">Telephone</span><span class="footer-tels">{tel_links()}</span></li>
     </ul>
     <address class="footer-address">
       <span class="footer-label">Office</span>
@@ -1202,6 +1247,12 @@ def footer(ctx, page):
     <p class="footer-copy">&copy; <span data-year>2026</span> Baba Law Firm. All rights reserved.</p>
   </div>
 </footer>'''
+
+
+def whatsapp_button():
+    """Floating WhatsApp link, bottom right on every page (client notes of 29 October); site.js keeps it clear of the cookie banner."""
+    return (f'<a class="wa-float" href="{esc(C.WHATSAPP_HREF)}" rel="noopener" title="WhatsApp" data-wa-float>{ICON_CHAT}'
+            f'<span class="visually-hidden">WhatsApp {C.WHATSAPP_DISPLAY}</span></a>')
 
 
 def cookie_ui(ctx, page):
@@ -1240,9 +1291,6 @@ def cookie_ui(ctx, page):
     listed = {c["category"] for c in C.COOKIE_REGISTER}
     register += "".join(f'<p class="register-note">{esc(o["register_note"])}</p>'
                         for o in opt if o.get("register_note") and o["name"] not in listed)
-    if ctx.preview:
-        register += ('<p class="preview-note">Preview: before launch, this register is completed from a cookie scan of the configured live website, '
-                     'listing each cookie or similar technology with its provider, purpose, category and duration.</p>')
     actions = ('<button type="submit" class="btn btn--primary btn--sm" value="save" data-consent="save"><span>Save Choices</span></button>'
                '<button type="submit" class="btn btn--ghost btn--sm" value="reject" data-consent="reject"><span>Reject Optional</span></button>'
                if opt else '<button type="submit" class="btn btn--primary btn--sm" value="close"><span>Close</span></button>')
@@ -1292,11 +1340,17 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
     desc = esc(seo["description"])
     ld = "" if is404 else jsonld(ctx, page)
     opt_keys = ",".join(o["key"] for o in ctx.optional)
+    moved = ""
+    if is404 and ctx.preview:
+        # Old preview addresses with no stub file (C.LEGACY_404_REDIRECTS): sent on before the login gate runs.
+        targets = json.dumps({C.PREVIEW_BASE_PATH + old: C.PREVIEW_BASE_PATH + new for old, new in C.LEGACY_404_REDIRECTS.items()})
+        moved = (f"<script>var BLF_MOVED={targets}[location.pathname];"
+                 f"if(BLF_MOVED)location.replace(BLF_MOVED+location.search+location.hash)</script>\n")
     gate = ""
     if ctx.login:
         # Preview login: the page stays hidden until the password has been entered on this device.
         to = C.PREVIEW_BASE_PATH + "login" if is404 else rel(h, "login")
-        gate = (f"<script>try{{if(localStorage.getItem('blf-preview')!=='{ctx.login['hash']}')throw 0}}catch(e){{"
+        gate = (f"<script>{'if(!BLF_MOVED)' if moved else ''}try{{if(localStorage.getItem('blf-preview')!=='{ctx.login['hash']}')throw 0}}catch(e){{"
                 f"document.documentElement.style.display='none';"
                 f"location.replace('{to}?next='+encodeURIComponent(location.pathname+location.search+location.hash))}}</script>\n")
     return f'''<!doctype html>
@@ -1304,7 +1358,7 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{base}{gate}<title>{title}</title>
+{base}{moved}{gate}<title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="robots" content="{robots}">
 {canon}<meta property="og:type" content="{"profile" if page["type"] == "profile" else "website"}">
@@ -1336,6 +1390,7 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 {main_html}
 </main>
 {footer(ctx, page)}
+{whatsapp_button()}
 {cookie_ui(ctx, page)}
 <script src="{a('assets/js/site.js')}" defer></script>
 </body>

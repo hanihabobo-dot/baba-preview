@@ -47,9 +47,15 @@ FORM_ENDPOINT = ""
 # ---------------------------------------------------------------- cookie register
 # Fill in from the cookie scan of the configured live website (Dr. Baba's notes:
 # "Do not publish a generic list of cookies that the website does not actually use").
-# Each entry: name, provider, purpose, category ("Strictly necessary", "Analytics", ...),
-# duration. Optional categories get a toggle in Cookie Settings and switch the banner on.
-# The consent record (assets/js/site.js) is listed now; the scan adds what Google Maps sets.
+# Each entry: name, provider, purpose, category ("Strictly necessary", "Analytics", "Maps", ...),
+# duration. Optional categories get a toggle in Cookie Settings and switch the banner on; a row in
+# the category "Maps" replaces the Google Maps note under the register (Ctx in templates.py).
+# The consent record (assets/js/site.js) is listed now. Scan of 31 October 2026: the Google Maps embed
+# (MAP above) was requested from the command line with an empty cookie jar, following every redirect, and
+# Google set no cookie in any response, so no Maps row is listed. That scan cannot see cookies that
+# Google's scripts set in the browser: a browser-based scan of the live domain (map loaded after
+# consent, as an EU/UK and a Syria-region visitor) must confirm this before launch. Add a row per
+# cookie it finds, and only those.
 COOKIE_REGISTER = [
     {"name": "blf-consent-v2", "provider": "Baba Law Firm",
      "purpose": "Records your choices in Cookie Settings (kept in your browser's local storage)",
@@ -58,14 +64,15 @@ COOKIE_REGISTER = [
 OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "description": "..."}]
 
 # ---------------------------------------------------------------- photographs
-# Stand-ins until the firm supplies its own photographs (with rights confirmed).
-UNSPLASH = "https://images.unsplash.com/{id}?auto=format&fit=crop&w={w}&q=72"
-PEXELS = "https://images.pexels.com/photos/{id}/pexels-photo-{id}.jpeg?auto=compress&cs=tinysrgb&w={w}"
+# Stock stand-ins (free-licence photographs from Unsplash and Pexels), now self-hosted in PHOTO_DIR so the
+# pages load nothing from third parties. Replace them with the firm's own photographs (rights confirmed):
+# export each as AVIF, WebP and JPEG at several widths under the same names and adjust "alt" and "pos".
+PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
 PHOTOS = {
-    "hero": {"src": ("unsplash", "photo-1561760041-f446e77d0885"), "alt": "Damascus at night", "pos": "60% 55%"},
-    "window": {"src": ("pexels", "30615454"), "alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
-    "courtyard": {"src": ("pexels", "34682160"), "alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
-    "skyline": {"src": ("unsplash", "photo-1561757780-9eb29837fbe9"), "alt": "Modern Damascus at night", "pos": "50% 60%"},
+    "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
+    "window": {"alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
+    "courtyard": {"alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
+    "skyline": {"alt": "Modern Damascus at night", "pos": "50% 60%"},
 }
 
 # Portraits: set "src" to the processed portrait path once received (e.g. assets/img/people/mohamad-baba).
@@ -131,6 +138,8 @@ PRIMARY_NAV = [
     ("our-people/", "Our People"),
     ("capabilities/", "Capabilities"),
     ("industries/", "Industries"),
+    # A second way in to the sanctions page (client notes of 29 October); it stays in the Capabilities list.
+    ("capabilities/regulatory-compliance-sanctions", "Sanctions & Compliance"),
     ("contact", "Contact"),
 ]
 FOOTER_NAV = PRIMARY_NAV + [("careers", "Careers")]
@@ -141,8 +150,13 @@ LEGACY_REDIRECTS = {
     "people.html": "our-people/",
     "people/tawfeeq-baba.html": "our-people/tawfeeq-baba",
     "people/mohamad-baba.html": "our-people/mohamad-baba",
-    "capabilities.html": "capabilities/",
-    "industries.html": "industries/",
     "capabilities/foreign-investment-market-entry.html": "capabilities/foreign-investment",
     "capabilities/regulatory-government-public-procurement.html": "capabilities/government-public-procurement",
+}
+# No stub file for these: GitHub Pages would serve capabilities.html for /capabilities, the address of
+# the Capabilities index itself. Without it, /capabilities answers 301 to /capabilities/, and the
+# preview 404 page sends the old .html addresses on.
+LEGACY_404_REDIRECTS = {
+    "capabilities.html": "capabilities/",
+    "industries.html": "industries/",
 }
