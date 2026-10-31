@@ -31,6 +31,7 @@
   .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--s-6); }
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-actions .btn { justify-content: space-between; }
+  .page-home .hero-content { padding-bottom: max(clamp(64px, 10vh, 120px), 100px); }   /* the buttons clear the WhatsApp button */
 }
 
 /* ---------- At a Glance: four facts on one ruled line ---------- */

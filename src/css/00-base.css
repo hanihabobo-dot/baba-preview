@@ -89,6 +89,7 @@ body {
 }
 img, svg, video { display: block; max-width: 100%; }
 img { height: auto; }
+picture { display: contents; }   /* the <picture> wrapper adds no box: the img keeps its parent's sizing */
 a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
 p { margin: 0 0 1.1em; }
 p:last-child { margin-bottom: 0; }
@@ -333,6 +334,11 @@ main.has-overlay-header { padding-top: 0; }
   .primary-nav { display: block; }
   .menu-toggle { display: none; }
 }
+/* Six items beside the logo: tighter spacing until 1180px (measured: one line, 59px from the logo at 1024) */
+@media (min-width: 1024px) and (max-width: 1179px) {
+  .nav-list { gap: 18px; }
+  .nav-list a { letter-spacing: 0.1em; }
+}
 @media (max-width: 420px) {
   .brand-logo { height: 40px; }
   .menu-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
@@ -344,7 +350,7 @@ main.has-overlay-header { padding-top: 0; }
   display: flex; flex-direction: column; overflow-y: auto;
 }
 .mobile-menu[hidden] { display: none; }
-.mobile-menu-top { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-dark); }
+.mobile-menu-top { flex: none; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-dark); }
 .menu-close { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; background: none; border: 0; cursor: pointer; color: var(--ivory); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
 .menu-x { position: relative; width: 22px; height: 22px; }
 .menu-x::before, .menu-x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: rotate(45deg); }
@@ -358,6 +364,10 @@ main.has-overlay-header { padding-top: 0; }
 .mobile-nav-list a[aria-current] { color: var(--bronze-light); }
 .mobile-menu-foot { padding-block: 24px 40px; color: var(--stone); font-size: 0.9375rem; }
 .mobile-menu-foot a { color: var(--ivory); display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-height: 740px) {   /* six items and both telephone numbers within a 667px-high phone screen */
+  .mobile-nav { padding-top: 24px; padding-bottom: 16px; }
+  .mobile-nav-list a { min-height: 56px; }
+}
 html.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
   .mobile-menu.is-open .mobile-nav-list li { animation: menu-in .6s var(--ease) both; }
@@ -533,6 +543,7 @@ html.menu-open { overflow: hidden; }
 .site-footer .brand-logo { height: 52px; }
 .footer-place { margin: 12px 0 0; color: var(--stone); font-size: var(--fs-small); }
 .footer-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-3); }
+.footer-nav li:has(> a[href$="regulatory-compliance-sanctions"]) { grid-column: 1 / -1; }   /* the long label gets a row, not two lines */
 
 .footer-nav a, .footer-contact a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--stone); text-decoration: none; font-size: var(--fs-small); transition: color .3s var(--ease); }
 .footer-nav a:hover, .footer-contact a:hover { color: var(--ivory); text-decoration: underline; text-decoration-color: var(--bronze-light); }
@@ -590,7 +601,7 @@ html.menu-open { overflow: hidden; }
 
 /* ---------- Print ---------- */
 @media print {
-  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
+  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
   main { padding-top: 0; }
   body { background: #fff; }
   .js .reveal, .js .reveal-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }

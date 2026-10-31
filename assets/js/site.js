@@ -105,6 +105,27 @@
     maps: function () { $$('[data-map]').forEach(loadMap); }
   };
   var loaded = {};
+
+  /* Floating WhatsApp button: where the banner reaches its corner (phones), the button sits above the banner until
+     it closes; when that would put it on the header (landscape phones), it waits out of sight instead. */
+  var wa = $('[data-wa-float]');
+  function placeWa() {
+    if (!wa) return;
+    var lift = 0, hide = false;
+    wa.hidden = false;   // measured in its corner
+    if (banner && !banner.hidden) {
+      var b = banner.getBoundingClientRect();
+      if (b.right > wa.getBoundingClientRect().left - 8) {
+        lift = banner.offsetHeight + 12;
+        hide = b.top - 12 - wa.offsetHeight < (header ? header.offsetHeight : 0) + 8;
+      }
+    }
+    wa.hidden = hide;
+    wa.style.setProperty('--wa-lift', (hide ? 0 : lift) + 'px');
+  }
+  if (banner && window.ResizeObserver) new ResizeObserver(placeWa).observe(banner); // also when the fonts arrive
+  window.addEventListener('resize', placeWa);
+
   function applyConsent(c) {
     OPTIONAL.forEach(function (k) {
       doc.setAttribute('data-consent-' + k, c && c[k] ? 'granted' : 'denied');
@@ -116,6 +137,7 @@
     consent = c;
     store(CONSENT_KEY, c);
     if (banner) banner.hidden = true;
+    placeWa();
     applyConsent(c);
   }
   function all(v) { var c = {}; OPTIONAL.forEach(function (k) { c[k] = v; }); return c; }
@@ -127,6 +149,7 @@
   }
 
   if (OPTIONAL.length && !consent && banner && !shotMode) banner.hidden = false;
+  placeWa();
   applyConsent(consent);
 
   document.addEventListener('click', function (e) {

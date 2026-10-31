@@ -1,10 +1,26 @@
 /* ==========================================================================
-   Contact — email first, WhatsApp second, then the office, the form and the visit
+   Contact — the form first (client notes of 29 October), then email, WhatsApp, the office and the visit
    ========================================================================== */
 
 .contact-hero { padding-block: clamp(56px, 8vw, 120px) clamp(48px, 6vw, 88px); }
+.contact-hero + .enquiry { padding-top: 0; }   /* the form follows the heading directly */
 
-/* ---------- Get in Touch + Contact Details ---------- */
+/* The contact line above the form, under the hero's rule: one line from 1024px, one item per line below */
+.enquiry-quick {
+  grid-column: 1 / -1; display: grid; margin: 0; padding: 12px 0;
+  font-size: var(--fs-small); line-height: 1.6; color: var(--ink-soft); font-variant-numeric: lining-nums;
+}
+.enquiry-quick a { display: inline-flex; align-items: center; min-height: 40px; color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
+.enquiry-quick a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
+.enquiry-quick-item { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.4em; min-height: 40px; }
+.enquiry-quick-sep { color: var(--stone); }
+.enquiry-quick-dot { display: none; color: var(--bronze); }
+@media (min-width: 1024px) {
+  .enquiry-quick { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; }
+  .enquiry-quick-dot { display: inline; }
+}
+
+/* ---------- Get in Touch + Contact Details (after the form) ---------- */
 .contact-top-grid { display: grid; gap: var(--s-6) var(--col-gap); }
 @media (min-width: 1024px) { .contact-top-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(48px, 7vw, 112px); } }
 .contact-top .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
@@ -41,6 +57,7 @@
 .enquiry .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .enquiry .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .enquiry-intro { color: var(--ink-soft); max-width: 40em; margin-bottom: var(--s-4); }
+.enquiry-main .contact-caution { margin: 0 0 var(--s-4); }   /* the caution again, read before the form is filled in */
 @media (min-width: 1024px) { .enquiry-next { position: sticky; top: calc(var(--header-h) + 32px); } }
 
 .page-contact .form { gap: 24px; }

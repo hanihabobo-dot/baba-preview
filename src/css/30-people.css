@@ -56,6 +56,10 @@
 .profile-cred { margin: var(--s-3) 0 0; }
 .profile-hero .breadcrumb { margin-bottom: clamp(32px, 4vw, 56px); }
 
+/* Contact band: the email line directly under the city */
+.cta-band .profile-contact-line { margin-top: 4px; }
+.profile-contact-line a { color: var(--ivory); text-decoration-color: var(--bronze-light); }
+
 .profile-bio .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); max-width: 18rem; }
 .profile-bio .prose { max-width: 40em; }
 .profile-bio .prose p:first-child { font-family: var(--serif); font-size: var(--fs-serif-lg); line-height: 1.42; color: var(--ink); }

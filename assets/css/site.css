@@ -91,6 +91,7 @@ body {
 }
 img, svg, video { display: block; max-width: 100%; }
 img { height: auto; }
+picture { display: contents; }   /* the <picture> wrapper adds no box: the img keeps its parent's sizing */
 a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
 p { margin: 0 0 1.1em; }
 p:last-child { margin-bottom: 0; }
@@ -335,6 +336,11 @@ main.has-overlay-header { padding-top: 0; }
   .primary-nav { display: block; }
   .menu-toggle { display: none; }
 }
+/* Six items beside the logo: tighter spacing until 1180px (measured: one line, 59px from the logo at 1024) */
+@media (min-width: 1024px) and (max-width: 1179px) {
+  .nav-list { gap: 18px; }
+  .nav-list a { letter-spacing: 0.1em; }
+}
 @media (max-width: 420px) {
   .brand-logo { height: 40px; }
   .menu-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
@@ -346,7 +352,7 @@ main.has-overlay-header { padding-top: 0; }
   display: flex; flex-direction: column; overflow-y: auto;
 }
 .mobile-menu[hidden] { display: none; }
-.mobile-menu-top { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-dark); }
+.mobile-menu-top { flex: none; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-dark); }
 .menu-close { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; background: none; border: 0; cursor: pointer; color: var(--ivory); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
 .menu-x { position: relative; width: 22px; height: 22px; }
 .menu-x::before, .menu-x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: rotate(45deg); }
@@ -360,6 +366,10 @@ main.has-overlay-header { padding-top: 0; }
 .mobile-nav-list a[aria-current] { color: var(--bronze-light); }
 .mobile-menu-foot { padding-block: 24px 40px; color: var(--stone); font-size: 0.9375rem; }
 .mobile-menu-foot a { color: var(--ivory); display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-height: 740px) {   /* six items and both telephone numbers within a 667px-high phone screen */
+  .mobile-nav { padding-top: 24px; padding-bottom: 16px; }
+  .mobile-nav-list a { min-height: 56px; }
+}
 html.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
   .mobile-menu.is-open .mobile-nav-list li { animation: menu-in .6s var(--ease) both; }
@@ -535,6 +545,7 @@ html.menu-open { overflow: hidden; }
 .site-footer .brand-logo { height: 52px; }
 .footer-place { margin: 12px 0 0; color: var(--stone); font-size: var(--fs-small); }
 .footer-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-3); }
+.footer-nav li:has(> a[href$="regulatory-compliance-sanctions"]) { grid-column: 1 / -1; }   /* the long label gets a row, not two lines */
 
 .footer-nav a, .footer-contact a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--stone); text-decoration: none; font-size: var(--fs-small); transition: color .3s var(--ease); }
 .footer-nav a:hover, .footer-contact a:hover { color: var(--ivory); text-decoration: underline; text-decoration-color: var(--bronze-light); }
@@ -592,7 +603,7 @@ html.menu-open { overflow: hidden; }
 
 /* ---------- Print ---------- */
 @media print {
-  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
+  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
   main { padding-top: 0; }
   body { background: #fff; }
   .js .reveal, .js .reveal-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
@@ -763,6 +774,30 @@ html.menu-open { overflow: hidden; }
 .mobile-contact li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; }
 .mobile-contact-label { min-width: 6.25rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-light); }
 
+/* ---------- Floating WhatsApp button, bottom right on every page (site colours, not WhatsApp green).
+   Above the header, below the cookie banner, mobile menu and dialog; site.js lifts it over the banner on phones
+   (a transform, so the move is no layout shift). ---------- */
+.wa-float {
+  position: fixed; z-index: 80;
+  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
+  background: var(--navy); color: var(--ivory);
+  box-shadow: inset 0 0 0 1.5px var(--bronze-light), 0 10px 28px rgba(16, 28, 44, 0.24);
+  transform: translateY(calc(-1 * var(--wa-lift, 0px)));
+  transition: background-color .3s var(--ease);
+}
+.wa-float[hidden] { display: none; }
+.wa-float .icon { width: 24px; height: 24px; }
+.wa-float:hover { background: var(--bronze-ink); }
+.wa-float:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; }
+@media (min-width: 720px) {
+  .wa-float { right: calc(24px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: no-preference) { .wa-float { transition: background-color .3s var(--ease), transform .35s var(--ease); } }
+html.menu-open .wa-float { display: none; }
+/* At the end of the page the button floats over empty footer space, not over the copyright line */
+.footer-bottom { padding-bottom: 92px; }
+
 /* ---------- Footer: address, navigation, contact ---------- */
 .footer-address { display: grid; align-content: start; gap: 2px; max-width: 22rem; font-size: var(--fs-small); line-height: 1.6; color: var(--stone); }
 .footer-address .footer-label { margin-bottom: 8px; }
@@ -770,7 +805,7 @@ html.menu-open { overflow: hidden; }
 .footer-contact { display: grid; gap: 6px; }
 .footer-contact li { display: grid; }
 .footer-label { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-light); line-height: 1.4; margin-top: 6px; }
-.footer-tels { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; color: var(--stone); }
+.footer-tels, .mobile-contact-tels { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; color: var(--stone); }
 .footer-sep { color: var(--line-dark-strong); }
 @media (max-width: 599px) {
   .footer-contact { display: grid; }
@@ -782,7 +817,6 @@ html.menu-open { overflow: hidden; }
 .register-title { margin: 28px 0 10px; font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze-ink); }
 .register-empty { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 0.9375rem; color: var(--ink); }
 .register-note { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 0.875rem; line-height: 1.5; color: var(--ink-soft); }
-.cookie-dialog .preview-note { margin: 16px 0 0; }
 .cookie-dialog .cookie-actions { margin-top: 24px; }
 .cookie-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; line-height: 1.5; }
 .cookie-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -838,6 +872,7 @@ html.menu-open { overflow: hidden; }
   .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--s-6); }
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-actions .btn { justify-content: space-between; }
+  .page-home .hero-content { padding-bottom: max(clamp(64px, 10vh, 120px), 100px); }   /* the buttons clear the WhatsApp button */
 }
 
 /* ---------- At a Glance: four facts on one ruled line ---------- */
@@ -1025,6 +1060,10 @@ html.menu-open { overflow: hidden; }
 .profile-cred { margin: var(--s-3) 0 0; }
 .profile-hero .breadcrumb { margin-bottom: clamp(32px, 4vw, 56px); }
 
+/* Contact band: the email line directly under the city */
+.cta-band .profile-contact-line { margin-top: 4px; }
+.profile-contact-line a { color: var(--ivory); text-decoration-color: var(--bronze-light); }
+
 .profile-bio .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); max-width: 18rem; }
 .profile-bio .prose { max-width: 40em; }
 .profile-bio .prose p:first-child { font-family: var(--serif); font-size: var(--fs-serif-lg); line-height: 1.42; color: var(--ink); }
@@ -1104,12 +1143,28 @@ html.menu-open { overflow: hidden; }
 
 
 /* ==========================================================================
-   Contact — email first, WhatsApp second, then the office, the form and the visit
+   Contact — the form first (client notes of 29 October), then email, WhatsApp, the office and the visit
    ========================================================================== */
 
 .contact-hero { padding-block: clamp(56px, 8vw, 120px) clamp(48px, 6vw, 88px); }
+.contact-hero + .enquiry { padding-top: 0; }   /* the form follows the heading directly */
 
-/* ---------- Get in Touch + Contact Details ---------- */
+/* The contact line above the form, under the hero's rule: one line from 1024px, one item per line below */
+.enquiry-quick {
+  grid-column: 1 / -1; display: grid; margin: 0; padding: 12px 0;
+  font-size: var(--fs-small); line-height: 1.6; color: var(--ink-soft); font-variant-numeric: lining-nums;
+}
+.enquiry-quick a { display: inline-flex; align-items: center; min-height: 40px; color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
+.enquiry-quick a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
+.enquiry-quick-item { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.4em; min-height: 40px; }
+.enquiry-quick-sep { color: var(--stone); }
+.enquiry-quick-dot { display: none; color: var(--bronze); }
+@media (min-width: 1024px) {
+  .enquiry-quick { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; }
+  .enquiry-quick-dot { display: inline; }
+}
+
+/* ---------- Get in Touch + Contact Details (after the form) ---------- */
 .contact-top-grid { display: grid; gap: var(--s-6) var(--col-gap); }
 @media (min-width: 1024px) { .contact-top-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(48px, 7vw, 112px); } }
 .contact-top .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
@@ -1146,6 +1201,7 @@ html.menu-open { overflow: hidden; }
 .enquiry .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .enquiry .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .enquiry-intro { color: var(--ink-soft); max-width: 40em; margin-bottom: var(--s-4); }
+.enquiry-main .contact-caution { margin: 0 0 var(--s-4); }   /* the caution again, read before the form is filled in */
 @media (min-width: 1024px) { .enquiry-next { position: sticky; top: calc(var(--header-h) + 32px); } }
 
 .page-contact .form { gap: 24px; }
