@@ -48,9 +48,10 @@ its siblings (the developer notes ask for every Key Legal Issues lead-in in bold
 ## URLs
 
 As in Dr. Baba's table: lowercase, no extensions. Canonical tags, structured data and
-`sitemap.xml` use the production form (`https://babalawfirm.net/our-people`). On GitHub Pages the
-three section pages are directory indexes (`/capabilities/`, `/industries/`, `/our-people/`), so
-the address bar shows a trailing slash there. The old preview addresses sent on 10 October redirect
+`sitemap.xml` use the production form (`https://babalawfirm.net/our-firm`). The three section pages
+are directory indexes (`/capabilities/`, `/industries/`, `/our-people/`): a static host answers the form
+without the slash with a redirect, so their links, canonical tags and sitemap entries all use the
+trailing slash, and nothing points at a redirect. The old preview addresses sent on 10 October redirect
 to the new pages (`LEGACY_REDIRECTS` in `site_config.py`). `capabilities.html` and `industries.html` must
 not exist as files, because GitHub Pages would serve them for `/capabilities` and `/industries`; the
 preview 404 page sends those two old addresses on instead (`LEGACY_404_REDIRECTS`).

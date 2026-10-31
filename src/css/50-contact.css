@@ -26,6 +26,10 @@
 .contact-top .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .contact-top .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .contact-git-intro { color: var(--ink-soft); max-width: 38em; }
+/* The page introduction, moved here from the hero so that the form follows the heading */
+.contact-welcome { grid-column: 1 / -1; max-width: 44rem; }
+.contact-welcome p { font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+.contact-welcome p:first-child { color: var(--ink); }
 
 .methods { display: grid; gap: 16px; list-style: none; margin: var(--s-4) 0 0; padding: 0; }
 @media (min-width: 640px) { .methods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -57,7 +61,7 @@
 .enquiry .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .enquiry .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .enquiry-intro { color: var(--ink-soft); max-width: 40em; margin-bottom: var(--s-4); }
-.enquiry-main .contact-caution { margin: 0 0 var(--s-4); }   /* the caution again, read before the form is filled in */
+.enquiry-main .contact-caution { margin: var(--s-4) 0 0; }   /* directly beneath the form, read before sending */
 @media (min-width: 1024px) { .enquiry-next { position: sticky; top: calc(var(--header-h) + 32px); } }
 
 .page-contact .form { gap: 24px; }

@@ -77,10 +77,9 @@ def rel(frm, to):
 
 
 def canonical(href):
-    """Production URL (Dr. Baba's table: lowercase, no extensions, no trailing slash)."""
-    if href == "":
-        return C.DOMAIN + "/"
-    return C.DOMAIN + "/" + href.rstrip("/")
+    """Production URL (Dr. Baba's table: lowercase, no extensions). The index pages of a folder keep the trailing
+    slash that every menu link uses, so the canonical, the sitemap and the links name one address."""
+    return C.DOMAIN + "/" + href
 
 
 # ---------------------------------------------------------------- media
@@ -691,7 +690,10 @@ def render_index(ctx, page):
 def render_contact(ctx, page):
     d = page["doc"]
     h = page["href"]
-    hero = page_hero(ctx, page, d, cls="contact-hero")
+    # The form directly under the heading (client notes of 29 October): the hero keeps the title and tagline, and
+    # the two introductory paragraphs open the Get in Touch band below the form.
+    hero = page_hero(ctx, page, d, cls="contact-hero", intro_html="")
+    welcome = "".join(para(b.text) for b in d.intro if b.kind == "p")
 
     git = d.section("Get in Touch")
     ps = [b for b in git.blocks if b.kind == "p"]
@@ -719,7 +721,6 @@ def render_contact(ctx, page):
       <p class="sec-tagline">{inline(git.tagline)}</p>
       {para(intro_p.text, cls="contact-git-intro")}
       {methods}
-      {para(notice_p.text, cls="contact-caution")}
     </section>'''
 
     det = d.section("Contact Details")
@@ -742,7 +743,8 @@ def render_contact(ctx, page):
     </section>'''
     top = f'''
 <section class="section section--white contact-top" aria-label="{esc(git.heading)}; {esc(det.heading)}">
-  <div class="container contact-top-grid">{git_html}{det_html}
+  <div class="container contact-top-grid">
+    <div class="contact-welcome">{welcome}</div>{git_html}{det_html}
   </div>
 </section>'''
 
@@ -754,7 +756,8 @@ def render_contact(ctx, page):
     form = enquiry_form(ctx, page, fields)
     after = "".join(para(b.text, cls="form-after") for b in enq.blocks[fields_at:] if b.kind == "p")
     quick = "".join("\n    " + contact_line(b.text) for b in before[1:])
-    # The caution of Get in Touch is repeated above the form, which now comes before it on the page.
+    # The caution of Get in Touch is shown once, directly beneath the form (review of 24 September), where it is
+    # read before the enquiry is sent.
     nxt = d.section("What Happens Next")
     steps = lead_items(nxt.blocks[0].items, "steps", "step-name", "step-desc", numbered=True, tag="ol")
     enquiry = f'''
@@ -764,8 +767,8 @@ def render_contact(ctx, page):
       <h2 class="label sec-label" id="send-an-enquiry">{esc(enq.heading)}</h2>
       <p class="sec-tagline">{inline(enq.tagline)}</p>
       {para(before[0].text, cls="enquiry-intro")}
-      {para(notice_p.text, cls="contact-caution")}
       {form}
+      {para(notice_p.text, cls="contact-caution")}
       <div class="form-after-wrap">{after}</div>
     </section>
     <section class="enquiry-next" aria-labelledby="what-happens-next">
