@@ -126,6 +126,17 @@
   if (banner && window.ResizeObserver) new ResizeObserver(placeWa).observe(banner); // also when the fonts arrive
   window.addEventListener('resize', placeWa);
 
+  /* WhatsApp links: wa.me opens the app on phones and tablets, but on a computer it shows WhatsApp's download
+     page, so there they open the chat in WhatsApp Web in a new tab. */
+  var touchDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+    (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);   // iPadOS reports itself as a Mac
+  if (!touchDevice) {
+    $$('a[href^="https://wa.me/"]').forEach(function (link) {
+      link.href = 'https://web.whatsapp.com/send?phone=' + link.getAttribute('href').replace(/\D/g, '');
+      link.target = '_blank';
+    });
+  }
+
   function applyConsent(c) {
     OPTIONAL.forEach(function (k) {
       doc.setAttribute('data-consent-' + k, c && c[k] ? 'granted' : 'denied');
