@@ -19,7 +19,19 @@
   .page-home .hero-video { filter: none; }
   .page-home .hero-video-toggle { left: auto; right: var(--gutter); bottom: auto; top: calc(var(--header-h) + 12px); }
 }
-.page-home .hero { min-height: max(640px, min(100svh, 960px)); }
+.page-home .hero { --hero-h: max(640px, min(100svh, 960px)); min-height: var(--hero-h); }
+/* On wide screens the film is never cropped either: it keeps its 16:9 shape, as large as the hero allows,
+   centred, and its edges fade into the navy around it. */
+@media (min-width: 960px) {
+  .page-home .hero-media { inset: 0 0 auto; margin-inline: auto; width: min(100%, calc(var(--hero-h) * 16 / 9)); aspect-ratio: 16 / 9; overflow: hidden; }
+  /* Keeps a stray pixel column of the film from showing beside the veil. */
+  .page-home .hero-media img, .page-home .hero-video { clip-path: inset(0 2px); }
+  .page-home .hero-media::after {
+    background:
+      linear-gradient(to right, rgb(16, 28, 44) 0%, rgba(16, 28, 44, 0) 9%, rgba(16, 28, 44, 0) 91%, rgb(16, 28, 44) 100%),
+      linear-gradient(to top, rgb(16, 28, 44) 0%, rgba(16, 28, 44, 0.74) 30%, rgba(16, 28, 44, 0.46) 70%, rgba(16, 28, 44, 0.4) 100%);
+  }
+}
 /* Hero film: site.js starts it (not with reduced motion) and fades it in over
    the photograph once it plays. The source is 480p, so it is softened a little and sits under the same veil. */
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease); filter: blur(0.6px) saturate(0.92); }
