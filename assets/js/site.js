@@ -272,11 +272,11 @@
     });
   });
 
-  /* ---------- Home hero film: wide screens only, never with reduced motion or data saving ---------- */
+  /* ---------- Home hero film: all screen sizes, never with reduced motion or data saving ---------- */
   var heroVideo = $('[data-hero-video]');
   var heroToggle = $('[data-hero-video-toggle]');
   var conn = navigator.connection || {};
-  if (heroVideo && !reduceMotion && !conn.saveData && window.matchMedia('(min-width: 960px)').matches) {
+  if (heroVideo && !reduceMotion && !conn.saveData) {
     heroVideo.addEventListener('playing', function () {
       heroVideo.classList.add('is-playing');
       if (heroToggle) heroToggle.hidden = false;
