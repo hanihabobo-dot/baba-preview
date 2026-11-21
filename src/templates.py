@@ -116,9 +116,9 @@ def portrait(slug, name, frm, role=""):
     if p["src"]:
         base = rel(frm, p["src"])
         return (f'<div class="portrait"><picture>'
-                f'<source type="image/avif" srcset="{base}-640.avif 640w, {base}-1200.avif 1200w" sizes="(min-width: 960px) 30vw, 90vw">'
-                f'<source type="image/webp" srcset="{base}-640.webp 640w, {base}-1200.webp 1200w" sizes="(min-width: 960px) 30vw, 90vw">'
-                f'<img src="{base}-1200.jpg" width="1200" height="1500" alt="{esc(name)}{", " + esc(role) if role else ""}, Baba Law Firm" loading="lazy" decoding="async">'
+                f'<source type="image/avif" srcset="{base}-640.avif 640w, {base}-800.avif 800w" sizes="(min-width: 960px) 30vw, 90vw">'
+                f'<source type="image/webp" srcset="{base}-640.webp 640w, {base}-800.webp 800w" sizes="(min-width: 960px) 30vw, 90vw">'
+                f'<img src="{base}-800.jpg" width="800" height="1000" alt="{esc(name)}{", " + esc(role) if role else ""}, Baba Law Firm" loading="lazy" decoding="async">'
                 f'</picture></div>')
     return (f'<div class="portrait"><div class="portrait-ph" aria-hidden="true">'
             f'<span class="portrait-initials">{p["initials"]}</span></div></div>')
@@ -1171,7 +1171,7 @@ def jsonld(ctx, page):
         if "memberOf" in p:
             node["memberOf"] = {"@type": "Organization", "name": p["memberOf"]}
         if C.PORTRAITS[page["slug"]]["src"]:
-            node["image"] = C.DOMAIN + "/" + C.PORTRAITS[page["slug"]]["src"] + "-1200.jpg"
+            node["image"] = C.DOMAIN + "/" + C.PORTRAITS[page["slug"]]["src"] + "-800.jpg"
         graph.append(node)
     if page["type"] in ("capability", "industry"):
         graph.append({"@type": "Service", "@id": url + "#service", "name": page["h1"], "serviceType": page["h1"],
