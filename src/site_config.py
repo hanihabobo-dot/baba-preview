@@ -72,7 +72,12 @@ PHOTOS = {
     "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
     # arched frames and behind the map panel. Replace with the originals when they arrive.
-    "door": {"alt": "A carved wooden door under an arch of banded stone in old Damascus", "pos": "50% 40%"},
+    # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
+    # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
+    # the picture's middle) and a least-squares fit through 13 points on the edge gives the centre height 536.3.
+    # templates.arch_fit() places the picture so that this centre is the centre of the frame's round top.
+    "door": {"alt": "A carved wooden door under an arch of banded stone in old Damascus", "pos": "50% 40%",
+             "arch": {"w": 854, "h": 1280, "cx": 398.5, "cy": 536.3}},
     "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
     "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
 }
