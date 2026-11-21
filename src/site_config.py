@@ -85,7 +85,7 @@ PHOTOS = {
 # Home hero film (received 21 November 2026 as a 480p copy; the shot of a mural carrying a photographer's
 # watermark is cut out; the full frame is kept, except the last shot, which is cropped to lose its black side bars): silent, looped, wide screens only, started by site.js
 # over the hero photograph, which stays as the picture for phones, reduced motion and data saving.
-HERO_VIDEO = "assets/video/damascus.mp4"
+HERO_VIDEO = "assets/video/damascus-full-854.mp4"   # rename with each re-encode, so no browser shows a cached older cut
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG
 # (the photographs were sent at 800 px; replace with larger originals when available).
