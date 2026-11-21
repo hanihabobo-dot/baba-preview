@@ -71,7 +71,7 @@ PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each k
 PHOTOS = {
     "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
-    # arched frames and behind the map panel. Replace with the originals when they arrive.
+    # arched frames and, for the panorama, a band no wider than the picture itself. Replace with the originals when they arrive.
     # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
     # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
     # the picture's middle) and a least-squares fit through 13 points on the edge gives the centre height 536.3.
