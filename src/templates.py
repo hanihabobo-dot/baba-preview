@@ -812,6 +812,7 @@ def render_contact(ctx, page):
     visit_html = f'''
 <section class="section visit" aria-labelledby="visit-our-office">
   <div class="container visit-grid">
+    <figure class="visit-photo reveal">{img("panorama", "(min-width: 1360px) 1280px, 94vw", h)}</figure>
     <div class="visit-text">
       <h2 class="label sec-label" id="visit-our-office">{esc(visit.heading)}</h2>
       <p class="sec-tagline">{inline(visit.tagline)}</p>
@@ -863,7 +864,6 @@ def map_block(ctx, page):
         directions = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
         return f'''
       <div class="contact-map" data-map data-map-src="{esc(src)}" data-map-title="Google Map: Baba Law Firm, Damascus">
-        <div class="contact-map-media" aria-hidden="true">{img("panorama", "(min-width: 960px) 50vw, 100vw", page["href"])}</div>
         <div class="contact-map-ph">
           <p class="contact-map-addr">{nowrap(esc(C.ADDRESS_LINE))}</p>
           <button type="button" class="btn btn--light btn--sm" data-map-load><span>Load Google Map</span></button>
