@@ -9,9 +9,15 @@
 .page-home .hero-media::after {
   background: linear-gradient(to top, rgba(16, 28, 44, 0.86) 0%, rgba(16, 28, 44, 0.72) 42%, rgba(16, 28, 44, 0.46) 74%, rgba(16, 28, 44, 0.4) 100%);
 }
-@media (max-width: 719px) {
-  .page-home .hero-media { inset: -18% 0 0; }
-  .page-home .hero-media::after { background: linear-gradient(to top, rgba(16, 28, 44, 0.9) 0%, rgba(16, 28, 44, 0.78) 58%, rgba(16, 28, 44, 0.46) 100%); }
+/* On a phone or upright tablet the wide film would be cropped to a thin, much enlarged strip.
+   There it sits whole, edge to edge, under the header, and fades into navy above the text. */
+@media (max-width: 959px) {
+  .page-home .hero { background: var(--navy); }
+  .page-home .hero-media { inset: var(--header-h) 0 auto; height: 56.25vw; overflow: hidden; }
+  .page-home .hero-media::after { background: linear-gradient(to top, rgb(16, 28, 44) 0%, rgba(16, 28, 44, 0.3) 26%, rgba(16, 28, 44, 0.12) 100%); }
+  .page-home .hero-content { padding-top: calc(var(--header-h) + 56.25vw + 20px); }
+  .page-home .hero-video { filter: none; }
+  .page-home .hero-video-toggle { left: auto; right: var(--gutter); bottom: auto; top: calc(var(--header-h) + 12px); }
 }
 .page-home .hero { min-height: max(640px, min(100svh, 960px)); }
 /* Hero film: site.js starts it (not with reduced motion) and fades it in over
