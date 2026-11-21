@@ -104,13 +104,17 @@
 /* ---------- Visit Our Office + Other Enquiries ---------- */
 .visit-grid { display: grid; gap: var(--s-6) var(--col-gap); align-items: stretch; }
 @media (min-width: 1024px) { .visit-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(48px, 7vw, 112px); } }
-/* The dusk panorama opens the section, across both columns. It is 1280 px wide, so it is never drawn wider. */
-.visit-photo { margin: 0; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius); background: var(--navy-2); }
-.visit-photo img { width: 100%; height: 100%; object-fit: cover; }
-@media (min-width: 720px) { .visit-photo { aspect-ratio: 5 / 2; } }
-@media (min-width: 1024px) { .visit-photo { grid-column: 1 / -1; aspect-ratio: 3 / 1; } }
-.visit .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
-.visit .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
+/* Visit Our Office opens with the dusk panorama as a full-width navy band that carries the section heading, like
+   the home hero: the picture runs edge to edge under a navy veil (text at >= 4.5:1), so it reads as part of the page. */
+.visit { padding-top: 0; }
+.visit-band { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; min-height: clamp(280px, 32vw, 440px);
+  margin-bottom: var(--section); padding-block: clamp(40px, 5vw, 72px); background: var(--navy); color: var(--ivory); }
+.visit-band-media { position: absolute; inset: 0; z-index: -1; }
+.visit-band-media img { width: 100%; height: 100%; object-fit: cover; }
+.visit-band-media::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(16, 28, 44, 0.9) 0%, rgba(16, 28, 44, 0.66) 45%, rgba(16, 28, 44, 0.38) 100%); }
+.visit-band .sec-label { padding-top: 14px; border-top: 1px solid var(--line-dark-strong); max-width: 34rem; }
+.visit-band .sec-tagline { margin-bottom: 0; color: var(--ivory); font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.625rem); }
 .visit-text .prose { max-width: 36em; }
 .other-enquiries { margin-top: var(--s-6); }
 .other-line { margin: 0; color: var(--ink-soft); }

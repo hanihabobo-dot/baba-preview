@@ -814,11 +814,15 @@ def render_contact(ctx, page):
                   f'{inline(head)} <a class="inline-arrow" href="{esc(rel(h, "careers"))}">{esc(last)}{ARROW}</a></p>')
     visit_html = f'''
 <section class="section visit" aria-labelledby="visit-our-office">
-  <div class="container visit-grid">
-    <figure class="visit-photo reveal">{img("panorama", "(min-width: 1360px) 1280px, 94vw", h)}</figure>
-    <div class="visit-text">
+  <div class="visit-band on-dark">
+    <div class="visit-band-media" aria-hidden="true">{img("panorama", "100vw", h)}</div>
+    <div class="container visit-band-text">
       <h2 class="label sec-label" id="visit-our-office">{esc(visit.heading)}</h2>
       <p class="sec-tagline">{inline(visit.tagline)}</p>
+    </div>
+  </div>
+  <div class="container visit-grid">
+    <div class="visit-text">
       <div class="prose">{"".join(para(b.text) for b in visit_ps)}</div>
       <section class="other-enquiries" aria-labelledby="other-enquiries">
         <h2 class="label sec-label" id="other-enquiries">{esc(other.heading)}</h2>
