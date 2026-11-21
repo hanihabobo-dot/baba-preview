@@ -293,13 +293,6 @@
     });
   }
 
-  /* ---------- Photograph alignment tool: only with ?align=1 (see align.js) ---------- */
-  if (/[?&]align=1/.test(location.search)) {
-    var alignScript = document.createElement('script');
-    alignScript.src = $('script[src$="site.js"]').src.replace(/site\.js.*$/, 'align.js');
-    document.body.appendChild(alignScript);
-  }
-
   /* ---------- Reveal on scroll (restrained) ---------- */
   var revealEls = $$('.reveal, .reveal-stagger');
   if (!reduceMotion && 'IntersectionObserver' in window) {
