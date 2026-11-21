@@ -276,7 +276,7 @@ def render_home(ctx, page):
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("hero", "100vw", h, eager=True)}</div>
+  <div class="hero-media">{img("hero", "100vw", h, eager=True)}<video class="hero-video" data-hero-video data-src="{esc(rel(h, C.HERO_VIDEO))}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></div>
   <div class="container hero-content">
     <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
     <div class="hero-sub">
@@ -287,6 +287,7 @@ def render_home(ctx, page):
       </div>
     </div>
   </div>
+  <button type="button" class="hero-video-toggle" data-hero-video-toggle aria-pressed="false" hidden><span class="visually-hidden">Pause background video</span><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path class="i-pause" d="M7 5h3v14H7zM14 5h3v14h-3z"/><path class="i-play" d="M8 5l11 7-11 7z"/></svg></button>
 </section>'''
 
     s = d.section("At a Glance")
@@ -305,7 +306,7 @@ def render_home(ctx, page):
     market = f'''
 <section class="section home-market" aria-labelledby="market-title">
   <div class="container home-split">
-    <figure class="home-split-media arch-crop reveal">{img("window", "(min-width: 960px) 34vw, 220px", h)}</figure>
+    <figure class="home-split-media arch-crop reveal">{img("door", "(min-width: 960px) 34vw, 220px", h)}</figure>
     <div class="home-split-text reveal">
       <h2 class="label sec-label" id="market-title">{esc(s.heading)}</h2>
       <p class="sec-tagline">{inline(s.tagline)}</p>
@@ -404,7 +405,7 @@ def render_firm(ctx, page):
     heritage = f'''
 <section class="section section--white firm-heritage" aria-labelledby="our-heritage">
   <div class="container firm-story-grid">
-    <div class="firm-story-media reveal"><figure class="arch"><div class="arch-frame">{img("courtyard", "(min-width: 960px) 36vw, 90vw", h)}</div></figure></div>
+    <div class="firm-story-media reveal"><figure class="arch"><div class="arch-frame">{img("street", "(min-width: 960px) 36vw, 90vw", h)}</div></figure></div>
     <div class="firm-story-text reveal">
       <h2 class="label sec-label" id="our-heritage">{esc(s.heading)}</h2>
       <p class="sec-tagline">{inline(s.tagline)}</p>
@@ -843,6 +844,7 @@ def map_block(ctx, page):
         directions = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
         return f'''
       <div class="contact-map" data-map data-map-src="{esc(src)}" data-map-title="Google Map: Baba Law Firm, Damascus">
+        <div class="contact-map-media" aria-hidden="true">{img("panorama", "(min-width: 960px) 50vw, 100vw", page["href"])}</div>
         <div class="contact-map-ph">
           <p class="contact-map-addr">{nowrap(esc(C.ADDRESS_LINE))}</p>
           <button type="button" class="btn btn--light btn--sm" data-map-load><span>Load Google Map</span></button>
@@ -854,7 +856,7 @@ def map_block(ctx, page):
             if ctx.preview else "")
     return f'''
       <div class="map-pending">
-        <div class="map-pending-media" aria-hidden="true">{img("skyline", "(min-width: 960px) 50vw, 100vw", page["href"])}</div>
+        <div class="map-pending-media" aria-hidden="true">{img("panorama", "(min-width: 960px) 50vw, 100vw", page["href"])}</div>
         <div class="map-pending-text">
           <p class="map-pending-firm">Baba Law Firm</p>
           <p class="map-pending-addr">{nowrap(esc(C.ADDRESS_LINE))}</p>

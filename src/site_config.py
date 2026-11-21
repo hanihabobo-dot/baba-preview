@@ -70,10 +70,17 @@ OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "de
 PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
 PHOTOS = {
     "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
-    "window": {"alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
-    "courtyard": {"alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
-    "skyline": {"alt": "Modern Damascus at night", "pos": "50% 60%"},
+    # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
+    # arched frames and behind the map panel. Replace with the originals when they arrive.
+    "door": {"alt": "A carved wooden door under an arch of banded stone in old Damascus", "pos": "50% 40%"},
+    "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
+    "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
 }
+
+# Home hero film (received 21 November 2026 as a 480p copy; the shot of a mural carrying a photographer's
+# watermark is cut out): silent, looped, wide screens only, started by site.js
+# over the hero photograph, which stays as the picture for phones, reduced motion and data saving.
+HERO_VIDEO = "assets/video/damascus.mp4"
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG
 # (the photographs were sent at 800 px; replace with larger originals when available).
