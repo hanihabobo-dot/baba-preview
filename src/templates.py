@@ -123,7 +123,10 @@ def img(key, sizes, frm, eager=False, cls=""):
     fallback = max([w for w in widths if w <= 1600] or widths[:1])
     load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     c = f' class="{cls}"' if cls else ""
-    style = arch_fit(p["arch"]) if "arch" in p else f'object-position:{p["pos"]}'
+    if "place" in p:        # set by hand with the alignment tool (home page with ?align=1); wins over the computed fit
+        style = "position:absolute;max-width:none;height:auto;width:{width};left:{left};top:{top}".format(**p["place"])
+    else:
+        style = arch_fit(p["arch"]) if "arch" in p else f'object-position:{p["pos"]}'
     return (f'<picture><source type="image/avif" srcset="{srcset("avif")}" sizes="{sizes}">'
             f'<source type="image/webp" srcset="{srcset("webp")}" sizes="{sizes}">'
             f'<img{c} src="{esc(f"{base}-{fallback}.jpg")}" srcset="{srcset("jpg")}" sizes="{sizes}" '
