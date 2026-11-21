@@ -70,8 +70,9 @@ OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "de
 PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
 PHOTOS = {
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
-    # arched frames and, for the panorama, under a navy veil (the Visit Our Office band and the home hero, where it is
-    # the still picture behind the film). All photographs on the site are the firm's own: no stock pictures remain. Replace with the originals when they arrive.
+    # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. All photographs on the site are the firm's own: no stock pictures remain. Replace with the originals when they arrive.
+    # The first frame of the hero film (854 x 480): the still picture behind it, so the film starts from the same view.
+    "herostill": {"alt": "Damascus at night, seen from above", "pos": "50% 50%"},
     # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
     # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
     # the picture's middle) and a least-squares fit through 13 points on the edge gives the centre height 536.3.
@@ -87,7 +88,7 @@ PHOTOS = {
 
 # Home hero film (received 21 November 2026 as a 480p copy; the shot of a mural carrying a photographer's
 # watermark is cut out; the full frame is kept, except the last shot, which is cropped to lose its black side bars): silent, looped, started by site.js
-# over the hero photograph, which stays as the picture with reduced motion, data saving, or where autoplay is refused.
+# over the hero photograph, which stays as the picture with reduced motion or where autoplay is refused.
 HERO_VIDEO = "assets/video/damascus-full-854.mp4"   # rename with each re-encode, so no browser shows a cached older cut
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG

@@ -84,6 +84,23 @@ def canonical(href):
 
 # ---------------------------------------------------------------- media
 
+_ASSET_VERSION = None
+
+
+def asset_version():
+    """Short hash of the stylesheet sources and site.js, added to their addresses as ?v=..., so that a browser or
+    host cache never pairs a new page with an older script or stylesheet."""
+    global _ASSET_VERSION
+    if _ASSET_VERSION is None:
+        import hashlib
+        root = Path(__file__).resolve().parent
+        digest = hashlib.sha256()
+        for f in sorted((root / "css").glob("*.css")) + [root.parent / "assets" / "js" / "site.js"]:
+            digest.update(f.read_bytes())
+        _ASSET_VERSION = digest.hexdigest()[:10]
+    return _ASSET_VERSION
+
+
 def photo_widths(key):
     """Widths of the files {key}-{w}.jpg in C.PHOTO_DIR, ascending; each width must also have an .avif and a .webp."""
     folder = Path(__file__).resolve().parent.parent / C.PHOTO_DIR
@@ -298,7 +315,7 @@ def render_home(ctx, page):
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("panorama", "100vw", h, eager=True)}<video class="hero-video" data-hero-video data-src="{esc(rel(h, C.HERO_VIDEO))}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></div>
+  <div class="hero-media">{img("herostill", "100vw", h, eager=True)}<video class="hero-video" data-hero-video data-src="{esc(rel(h, C.HERO_VIDEO))}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></div>
   <div class="container hero-content">
     <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
     <div class="hero-sub">
@@ -1426,7 +1443,7 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 <link rel="apple-touch-icon" href="{a('assets/img/apple-touch-icon.png')}">
 <link rel="preload" href="{a('assets/fonts/manrope-latin-wght-normal.woff2')}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{a('assets/fonts/cormorant-garamond-latin-wght-normal.woff2')}" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{a('assets/css/site.css')}">
+<link rel="stylesheet" href="{a('assets/css/site.css')}?v={asset_version()}">
 <script>document.documentElement.classList.add('js');setTimeout(function(){{if(!window.BLF_READY)document.documentElement.classList.remove('js')}},2500)</script>
 {ld}
 </head>
@@ -1438,7 +1455,7 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 {footer(ctx, page)}
 {whatsapp_button()}
 {cookie_ui(ctx, page)}
-<script src="{a('assets/js/site.js')}" defer></script>
+<script src="{a('assets/js/site.js')}?v={asset_version()}" defer></script>
 </body>
 </html>
 '''
