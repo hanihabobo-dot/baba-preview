@@ -916,7 +916,7 @@ html.menu-open .wa-float { display: none; }
 /* ---------- A Market Opening to Investment: the arched photograph opposite the text ---------- */
 .home-split { display: grid; gap: var(--s-5) var(--col-gap); align-items: center; }
 .home-split-media { margin: 0; }
-.arch-crop { aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px 0 0; background: var(--sand); }
+.arch-crop { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 999px 999px 0 0; background: var(--sand); }
 .arch-crop img { width: 100%; height: 100%; object-fit: cover; }
 .home-split-text .sec-tagline { max-width: 16em; }
 .home-split-text .prose { max-width: 36em; }

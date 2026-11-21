@@ -96,6 +96,24 @@ def photo_widths(key):
     return ws
 
 
+def arch_fit(a, ratio=1.25):
+    """Inline style that lines a photographed arch up with the arched frame (.arch-crop: width W, height ratio * W,
+    a semicircle of radius W/2 on top, so the centre of its curve is W/2 from the left and W/2 from the top).
+
+    With the picture drawn s times the frame's width, the arch centre (cx, cy) lands on the frame's centre when
+        left = W/2 - s*W*cx/w        top = W/2 - s*W*cy/w
+    The picture must still cover the frame, so left <= 0 and left + s*W >= W: s >= w / (2*cx) and s >= w / (2*(w - cx)).
+    The smallest such s keeps the most of the picture and the least difference between the two curves."""
+    w, h, cx, cy = a["w"], a["h"], a["cx"], a["cy"]
+    s = max(w / (2 * cx), w / (2 * (w - cx)))
+    left = 0.5 - s * cx / w                  # in frame widths
+    top = 0.5 - s * cy / w                   # in frame widths
+    if top > 0 or top + s * h / w < ratio:
+        raise SystemExit("arch_fit: the photograph does not cover the frame at this position")
+    return (f"position:absolute;max-width:none;width:{s * 100:.2f}%;height:auto;"
+            f"left:{left * 100:.2f}%;top:{top / ratio * 100:.2f}%")     # top is a share of the frame's height
+
+
 def img(key, sizes, frm, eager=False, cls=""):
     """A self-hosted photograph as seen from the page `frm`: AVIF and WebP sources with a JPEG fallback."""
     p = C.PHOTOS[key]
@@ -105,10 +123,11 @@ def img(key, sizes, frm, eager=False, cls=""):
     fallback = max([w for w in widths if w <= 1600] or widths[:1])
     load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     c = f' class="{cls}"' if cls else ""
+    style = arch_fit(p["arch"]) if "arch" in p else f'object-position:{p["pos"]}'
     return (f'<picture><source type="image/avif" srcset="{srcset("avif")}" sizes="{sizes}">'
             f'<source type="image/webp" srcset="{srcset("webp")}" sizes="{sizes}">'
             f'<img{c} src="{esc(f"{base}-{fallback}.jpg")}" srcset="{srcset("jpg")}" sizes="{sizes}" '
-            f'alt="{esc(p["alt"])}" {load} decoding="async" style="object-position:{p["pos"]}"></picture>')
+            f'alt="{esc(p["alt"])}" {load} decoding="async" style="{style}"></picture>')
 
 
 def portrait(slug, name, frm, role=""):
