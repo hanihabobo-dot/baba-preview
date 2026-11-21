@@ -79,7 +79,7 @@ PHOTOS = {
     "door": {"alt": "A carved wooden door under an arch of banded stone in old Damascus", "pos": "50% 40%",
              "arch": {"w": 854, "h": 1280, "cx": 398.5, "cy": 536.3},
              # Set by hand by Hani with the alignment tool on 21 November 2026; wins over the computed fit.
-             "place": {"width": "107.15%", "left": "0.92%", "top": "-11.44%"}},
+             "place": {"width": "107.15%", "left": "0.92%", "top": "-10.89%"}},
     "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
     "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
 }
