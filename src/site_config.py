@@ -75,10 +75,11 @@ PHOTOS = {
     "skyline": {"alt": "Modern Damascus at night", "pos": "50% 60%"},
 }
 
-# Portraits: set "src" to the processed portrait path once received (e.g. assets/img/people/mohamad-baba).
+# Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG
+# (the photographs were sent at 800 px; replace with larger originals when available).
 PORTRAITS = {
-    "mohamad-baba": {"initials": "MB", "src": None},
-    "tawfeeq-baba": {"initials": "TB", "src": None},
+    "mohamad-baba": {"initials": "MB", "src": "assets/img/people/mohamad-baba"},
+    "tawfeeq-baba": {"initials": "TB", "src": "assets/img/people/tawfeeq-baba"},
 }
 
 # ---------------------------------------------------------------- page lists (order as supplied)
