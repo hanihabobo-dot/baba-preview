@@ -690,8 +690,9 @@ def render_index(ctx, page):
 def render_contact(ctx, page):
     d = page["doc"]
     h = page["href"]
-    # The form directly under the heading (client notes of 29 October): the hero keeps the title and tagline, and
-    # the two introductory paragraphs open the Get in Touch band below the form.
+    # Section order as the client set it on 21 November: Contact (hero) -> Get in Touch -> Contact Details ->
+    # Send an Enquiry -> What Happens Next -> Visit Our Office. The hero keeps the title and tagline, and the two
+    # introductory paragraphs open the Get in Touch band.
     hero = page_hero(ctx, page, d, cls="contact-hero", intro_html="")
     welcome = "".join(para(b.text) for b in d.intro if b.kind == "p")
 
@@ -798,13 +799,27 @@ def render_contact(ctx, page):
       <section class="other-enquiries" aria-labelledby="other-enquiries">
         <h2 class="label sec-label" id="other-enquiries">{esc(other.heading)}</h2>
         {other_html}
-      </section>
+      </section>{quick_contact(h)}
     </div>
     <div class="visit-map">{map_block(ctx, page)}</div>
   </div>
 </section>'''
-    # The form first, under the heading (client notes of 29 October); then the other ways to reach the firm.
-    return hero + enquiry + top + visit_html
+    return hero + top + enquiry + visit_html
+
+
+def quick_contact(h):
+    """Quick Contact (client request of 21 November): a QR code that opens an email to the firm, beside the map.
+    Computers only — CSS hides it on phones and tablets, where the Send Us an Email button above is tapped instead.
+    The SVG is generated locally by src/make_email_qr.py from C.EMAIL_HREF; no QR service is called."""
+    return f'''
+      <section class="quick-contact" aria-labelledby="quick-contact">
+        <h2 class="label sec-label" id="quick-contact">Quick Contact</h2>
+        <p class="quick-contact-text">Scan the QR code to email us directly.</p>
+        <div class="quick-contact-card">
+          <img class="quick-contact-qr" src="{esc(rel(h, "assets/img/qr/email-qr.svg"))}" width="168" height="168" alt="QR code to email Baba Law Firm at {C.EMAIL}" loading="lazy" decoding="async">
+          <a class="quick-contact-mail" href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a>
+        </div>
+      </section>'''
 
 
 def contact_line(text):

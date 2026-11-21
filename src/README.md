@@ -36,9 +36,11 @@ The wording is the approved copy of 19 October 2026 ("Website Content – Review
 Plain lines are paragraphs. **bold**, *italic*, and " \\ " for a line break.
 ```
 
-`contact.txt` keeps the order of the client's document, but the page shows Send an Enquiry first (notes of
-29 October): the second paragraph of that section (Telephone · Email · Video-call meetings) is the line above
-the form, and the Get in Touch caution is shown above the form as well.
+`contact.txt` keeps the order of the client's document, and the page follows it (client request of
+21 November, replacing the form-first order of 29 October): Get in Touch, Contact Details, Send an Enquiry,
+What Happens Next, Visit Our Office. The second paragraph of Send an Enquiry (Telephone · Email · Video-call
+meetings) is the line above the form, and the Get in Touch caution is shown beneath the form. The Quick Contact
+QR code beside the map is `assets/img/qr/email-qr.svg`, made by `src/make_email_qr.py` (see that file).
 
 Two formatting slips in the supplied PDF were normalised, without changing any words:
 the Energy & Power lead-in "Oil and gas exploration, production and refining." is bold like
