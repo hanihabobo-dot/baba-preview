@@ -315,7 +315,7 @@ def render_home(ctx, page):
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("herostill", "100vw", h, eager=True)}<video class="hero-video" data-hero-video data-src="{esc(rel(h, C.HERO_VIDEO))}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video></div>
+  <div class="hero-media">{img("herostill", "100vw", h, eager=True)}</div>
   <div class="container hero-content">
     <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
     <div class="hero-sub">
@@ -326,7 +326,6 @@ def render_home(ctx, page):
       </div>
     </div>
   </div>
-  <button type="button" class="hero-video-toggle" data-hero-video-toggle aria-pressed="false" hidden><span class="visually-hidden">Pause background video</span><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path class="i-pause" d="M7 5h3v14H7zM14 5h3v14h-3z"/><path class="i-play" d="M8 5l11 7-11 7z"/></svg></button>
 </section>'''
 
     s = d.section("At a Glance")

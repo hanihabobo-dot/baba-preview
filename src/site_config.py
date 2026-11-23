@@ -71,7 +71,8 @@ PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each k
 PHOTOS = {
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
     # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. All photographs on the site are the firm's own: no stock pictures remain. Replace with the originals when they arrive.
-    # The first frame of the hero film (854 x 480): the still picture behind it, so the film starts from the same view.
+    # Home hero photograph (client request of 23 November 2026, replacing the hero film): the film's opening view,
+    # Damascus at night from above, as a sharp still.
     "herostill": {"alt": "Damascus at night, seen from above", "pos": "50% 50%"},
     # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
     # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
@@ -85,11 +86,6 @@ PHOTOS = {
     "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
     "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
 }
-
-# Home hero film (received 21 November 2026 as a 480p copy; the shot of a mural carrying a photographer's
-# watermark is cut out; the full frame is kept, except the last shot, which is cropped to lose its black side bars): silent, looped, started by site.js
-# over the hero photograph, which stays as the picture with reduced motion or where autoplay is refused.
-HERO_VIDEO = "assets/video/damascus-full-854.mp4"   # rename with each re-encode, so no browser shows a cached older cut
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG
 # (the photographs were sent at 800 px; replace with larger originals when available).

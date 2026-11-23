@@ -272,26 +272,6 @@
     });
   });
 
-  /* ---------- Home hero film: all screen sizes; not with reduced motion ---------- */
-  var heroVideo = $('[data-hero-video]');
-  var heroToggle = $('[data-hero-video-toggle]');
-  if (heroVideo && !reduceMotion) {
-    heroVideo.addEventListener('playing', function () {
-      heroVideo.classList.add('is-playing');
-      if (heroToggle) heroToggle.hidden = false;
-    }, { once: true });
-    heroVideo.muted = true;
-    heroVideo.src = heroVideo.getAttribute('data-src');
-    var started = heroVideo.play();
-    if (started && started.catch) started.catch(function () { /* autoplay refused: the photograph stays */ });
-    if (heroToggle) heroToggle.addEventListener('click', function () {
-      var pause = !heroVideo.paused;
-      if (pause) heroVideo.pause(); else heroVideo.play();
-      heroToggle.setAttribute('aria-pressed', String(pause));
-      $('.visually-hidden', heroToggle).textContent = pause ? 'Play background video' : 'Pause background video';
-    });
-  }
-
   /* ---------- Reveal on scroll (restrained) ---------- */
   var revealEls = $$('.reveal, .reveal-stagger');
   if (!reduceMotion && 'IntersectionObserver' in window) {
