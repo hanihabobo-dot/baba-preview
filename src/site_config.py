@@ -93,6 +93,10 @@ PHOTOS = {
     #   https://www.pexels.com/photo/traditional-mashrabiya-window-in-damascus-syria-30615454/
     "courtyard": {"alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
     "window": {"alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
+    # Regulatory Compliance & Sanctions (client request of 23 November 2026), also from Pexels (same licence):
+    # alley: "Narrow Alleyway in Old Damascus, Syria" by Baraa Obied,
+    #   https://www.pexels.com/photo/narrow-alleyway-in-old-damascus-syria-39344630/ (downloaded at 1600 x 2400)
+    "alley": {"alt": "A quiet lane in old Damascus between banded stone and plastered house walls", "pos": "50% 60%"},
 }
 
 # Arched photograph in a page's header, beside its title (client request of 23 November 2026).
@@ -100,6 +104,7 @@ PHOTOS = {
 PAGE_PHOTOS = {
     "capabilities/": "courtyard",
     "industries/": "window",
+    "capabilities/regulatory-compliance-sanctions": "alley",
 }
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG

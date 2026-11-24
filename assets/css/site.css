@@ -1105,6 +1105,30 @@ html.menu-open .wa-float { display: none; }
   .practice-hero .breadcrumb { grid-column: 1 / -1; }
 }
 @media (min-width: 960px) and (max-width: 1199px) { .practice-hero .container { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); } }
+/* With an arched photograph (PAGE_PHOTOS in site_config.py): phones show it under the tagline; from 600 px it
+   stands in the left column beside the title and tagline, and from 960 px beside the introduction too. The text
+   starts level with the top of the photograph: an empty last row beside it takes up any height the text lacks,
+   so the title and tagline are never pushed apart. */
+.page-hero--photo .head-photo { margin: clamp(24px, 4vw, 32px) 0; }
+@media (min-width: 600px) {
+  .page-hero--photo .container {
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: auto auto auto 1fr auto;
+    column-gap: var(--col-gap); align-items: start;
+  }
+  .page-hero--photo .container > * { grid-column: 2; }
+  .page-hero--photo .breadcrumb { grid-column: 1 / -1; grid-row: 1; }
+  .page-hero--photo .page-title { grid-row: 2; }
+  .page-hero--photo .page-tagline { grid-row: 3; }
+  .page-hero--photo .head-photo { grid-column: 1; grid-row: 2 / span 3; width: 100%; max-width: 240px; margin: 0; }
+  .page-hero--photo .page-intro { grid-column: 1 / -1; grid-row: 5; margin-top: clamp(24px, 4vw, 32px); }
+}
+@media (min-width: 960px) {
+  .page-hero--photo .container, .practice-hero.page-hero--photo .container {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); grid-template-rows: auto auto auto auto 1fr;
+  }
+  .page-hero--photo .head-photo { grid-row: 2 / span 4; max-width: 320px; }
+  .page-hero--photo .page-intro { grid-column: 2; grid-row: 4; }
+}
 
 /* ---------- Body ---------- */
 .practice-body { padding-block: clamp(64px, 8vw, 120px); }

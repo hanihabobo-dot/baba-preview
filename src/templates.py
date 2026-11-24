@@ -150,13 +150,35 @@ def img(key, sizes, frm, eager=False, cls=""):
             f'alt="{esc(p["alt"])}" {load} decoding="async" style="{style}"></picture>')
 
 
+def jpeg_size(path):
+    """(width, height) of a JPEG file, read from its start-of-frame marker."""
+    data = Path(path).read_bytes()
+    i = 2
+    while i + 9 < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marker = data[i + 1]
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            return int.from_bytes(data[i + 7:i + 9], "big"), int.from_bytes(data[i + 5:i + 7], "big")
+        i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
+    raise SystemExit(f"Not a readable JPEG: {path}")
+
+
 def header_photo(page):
     """The arched photograph beside a page's title (C.PAGE_PHOTOS), or "".
-    The frame is 4:5 (at most 320 px wide) and the photographs are landscape, so object-fit: cover draws them
-    up to about 1.9 times the frame's width: `sizes` says so, or browsers would pick a file too small."""
+    The frame is 4:5 and at most 320 px wide (240 px below 960 px). object-fit: cover draws a wider photograph at
+    the frame's height, so it is drawn wider than the frame: `sizes` gives the drawn width, or browsers would
+    pick a file that is too small."""
     key = C.PAGE_PHOTOS.get(page["href"])
-    return (f'<figure class="head-photo arch-crop">{img(key, "(min-width: 960px) 600px, 450px", page["href"], eager=True)}</figure>'
-            if key else "")
+    if not key:
+        return ""
+    folder = Path(__file__).resolve().parent.parent / C.PHOTO_DIR
+    w, h = jpeg_size(folder / f"{key}-{photo_widths(key)[-1]}.jpg")
+    k = max(1.0, (w / h) / (4 / 5))
+    sizes = f"(min-width: 960px) {round(320 * k)}px, {round(240 * k)}px"
+    return f'<figure class="head-photo arch-crop">{img(key, sizes, page["href"], eager=True)}</figure>'
+
 
 
 def portrait(slug, name, frm, role=""):
@@ -267,12 +289,16 @@ def page_hero(ctx, page, doc, intro_html=None, cls="", show_crumbs=False, title=
     tagline = f'<p class="page-tagline">{inline(doc.tagline)}</p>' if doc.tagline else ""
     intro = intro_html if intro_html is not None else (
         '<div class="page-intro">' + "".join(para(b.text) for b in doc.intro if b.kind == "p") + "</div>" if doc.intro else "")
+    photo = header_photo(page)
+    if photo:
+        cls += " page-hero--photo"
     return f'''
 <section class="page-hero page-hero--ivory {cls}" aria-labelledby="page-title">
   <div class="container">
     {crumbs}
     <h1 class="h1 page-title" id="page-title">{esc(title or doc.title)}</h1>
     {tagline}
+    {photo}
     {intro}
   </div>
 </section>'''
