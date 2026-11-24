@@ -21,6 +21,26 @@
 /* ---------- Index pages: Capabilities, Industries ---------- */
 .index-page { padding-block: clamp(40px, 6vw, 96px) var(--section); }
 .index-page .page-title { margin-bottom: clamp(32px, 4.5vw, 64px); }
+/* Arched photograph beside the title (PAGE_PHOTOS in site_config.py). Phones: title, photograph, group links.
+   From 600 px the photograph stands in the left column and the title and links sit at its foot, on the line where
+   the list begins. */
+.index-page--photo .index-head { margin-bottom: clamp(40px, 5vw, 72px); }
+.index-page--photo .page-title { margin-bottom: clamp(24px, 5vw, 32px); }
+.head-photo { width: min(60%, 240px); margin: 0; }
+.index-page--photo .index-head .cap-jump { margin: clamp(28px, 6vw, 40px) 0 0; }
+@media (min-width: 600px) {
+  .index-page--photo .index-head {
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: 1fr auto auto;
+    column-gap: var(--col-gap);
+  }
+  .index-page--photo .head-photo { grid-column: 1; grid-row: 1 / -1; width: 100%; max-width: 240px; }
+  .index-page--photo .page-title { grid-column: 2; grid-row: 2; margin-bottom: 0; }
+  .index-page--photo .index-head .cap-jump { grid-column: 2; grid-row: 3; margin-top: clamp(20px, 2.5vw, 32px); }
+}
+@media (min-width: 960px) {
+  .index-page--photo .index-head { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); }
+  .index-page--photo .head-photo { max-width: 320px; }
+}
 .cap-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
 .cap-row {
   position: relative; display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) 28px; gap: 6px 16px; align-items: baseline;

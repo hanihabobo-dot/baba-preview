@@ -150,6 +150,15 @@ def img(key, sizes, frm, eager=False, cls=""):
             f'alt="{esc(p["alt"])}" {load} decoding="async" style="{style}"></picture>')
 
 
+def header_photo(page):
+    """The arched photograph beside a page's title (C.PAGE_PHOTOS), or "".
+    The frame is 4:5 (at most 320 px wide) and the photographs are landscape, so object-fit: cover draws them
+    up to about 1.9 times the frame's width: `sizes` says so, or browsers would pick a file too small."""
+    key = C.PAGE_PHOTOS.get(page["href"])
+    return (f'<figure class="head-photo arch-crop">{img(key, "(min-width: 960px) 600px, 450px", page["href"], eager=True)}</figure>'
+            if key else "")
+
+
 def portrait(slug, name, frm, role=""):
     p = C.PORTRAITS[slug]
     if p["src"]:
@@ -690,6 +699,7 @@ def render_index(ctx, page):
         <span class="cap-row-arrow">{ARROW}</span>
       </a></li>'''
 
+    jump = ""
     if kind == "ind-index":
         rows = "".join(row(i, slug, "h2") for i, (slug, _) in enumerate(items, 1))
         body = f'''
@@ -700,7 +710,11 @@ def render_index(ctx, page):
         grouped = [s for _, slugs in C.CAPABILITY_GROUPS for s in slugs]
         if sorted(grouped) != sorted(titles):
             raise ValueError("CAPABILITY_GROUPS must list every capability exactly once")
-        jump = "".join(f'<li><a class="chip" href="#{slugify(g)}">{esc(g)}</a></li>' for g, _ in C.CAPABILITY_GROUPS)
+        chips = "".join(f'<li><a class="chip" href="#{slugify(g)}">{esc(g)}</a></li>' for g, _ in C.CAPABILITY_GROUPS)
+        jump = f'''
+      <nav class="chips cap-jump" aria-label="Capability groups">
+        <ul role="list">{chips}</ul>
+      </nav>'''
         groups, n = [], 0
         for g, slugs in C.CAPABILITY_GROUPS:
             rows = "".join(row(n + i, slug, "h3") for i, slug in enumerate(slugs, 1))
@@ -711,15 +725,18 @@ def render_index(ctx, page):
       <ol class="cap-rows" role="list">{rows}
       </ol>
     </section>''')
-        body = f'''
-    <nav class="chips cap-jump" aria-label="Capability groups">
-      <ul role="list">{jump}</ul>
-    </nav>{"".join(groups)}'''
+        body = "".join(groups)
+    photo = header_photo(page)
+    # Title, then the photograph, then the links to the groups: the order on a phone. From 600 px the photograph
+    # stands in the left column and the title and links sit at its foot (40-practice.css).
     return f'''
-<section class="index-page" aria-labelledby="page-title">
+<section class="index-page{' index-page--photo' if photo else ''}" aria-labelledby="page-title">
   <div class="container">
     {breadcrumb_html(page)}
-    <h1 class="h1 page-title" id="page-title">{esc(page["h1"])}</h1>{body}
+    <div class="index-head">
+      <h1 class="h1 page-title" id="page-title">{esc(page["h1"])}</h1>
+      {photo}{jump}
+    </div>{body}
   </div>
 </section>'''
 

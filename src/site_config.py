@@ -64,13 +64,12 @@ COOKIE_REGISTER = [
 OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "description": "..."}]
 
 # ---------------------------------------------------------------- photographs
-# Stock stand-ins (free-licence photographs from Unsplash and Pexels), now self-hosted in PHOTO_DIR so the
-# pages load nothing from third parties. Replace them with the firm's own photographs (rights confirmed):
-# export each as AVIF, WebP and JPEG at several widths under the same names and adjust "alt" and "pos".
+# All photographs are self-hosted in PHOTO_DIR, so the pages load nothing from third parties. To add or replace one,
+# export it as AVIF, WebP and JPEG at several widths under the same name and adjust "alt" and "pos".
 PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
 PHOTOS = {
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
-    # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. All photographs on the site are the firm's own: no stock pictures remain. Replace with the originals when they arrive.
+    # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. Replace with the originals when they arrive.
     # Home hero photograph (client request of 23 November 2026, replacing the hero film): the film's opening view,
     # Damascus at night from above, as a sharp still.
     "herostill": {"alt": "Damascus at night, seen from above", "pos": "50% 50%"},
@@ -85,6 +84,22 @@ PHOTOS = {
              "place": {"width": "107.15%", "left": "0.92%", "top": "-10.89%"}},
     "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
     "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
+    # Brought back on the client's request of 23 November 2026 (on the site until 21 November, removed in commit
+    # 840da34; files restored from 840da34~1). Free-licence photographs from Pexels: the Pexels licence
+    # (https://www.pexels.com/license/) allows commercial use without attribution. Sources, for the firm's records:
+    # courtyard: "Historic Courtyard in Damascus, Syria" by Hala Hejazy,
+    #   https://www.pexels.com/photo/historic-courtyard-in-damascus-syria-34682160/
+    # window: "Traditional Mashrabiya Window in Damascus Syria" by Sami Raad,
+    #   https://www.pexels.com/photo/traditional-mashrabiya-window-in-damascus-syria-30615454/
+    "courtyard": {"alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
+    "window": {"alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
+}
+
+# Arched photograph in a page's header, beside its title (client request of 23 November 2026).
+# Keys are page addresses as in build.registry(); values are keys of PHOTOS.
+PAGE_PHOTOS = {
+    "capabilities/": "courtyard",
+    "industries/": "window",
 }
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG

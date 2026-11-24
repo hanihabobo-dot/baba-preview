@@ -91,13 +91,14 @@ preview 404 page sends those two old addresses on instead (`LEGACY_404_REDIRECTS
   `/sitemap.xml` in Google Search Console.
 - **Policies**: record the launch date internally as the effective date of the Privacy and Cookie
   Policies; show "Last updated" only when a policy is later amended.
-- **Photographs and portraits**: the four stock stand-ins (`PHOTOS`, free-licence photographs from
-  Unsplash and Pexels) are self-hosted in `assets/img/photos/` as `{key}-{width}.avif/.webp/.jpg`, so the
-  pages load nothing from third parties. They are still to be replaced by the firm's own photographs
-  (rights confirmed): export the new ones under the same names, in the same three formats (the build uses
-  the widths it finds on disk) and adjust `alt` and `pos`. The home hero's "Damascus at night" rests on the
-  photographer's own location tag; ask the firm to confirm it recognises the view. Add the portraits
-  (`PORTRAITS[...]["src"]`, served as AVIF/WebP with a JPEG fallback at 640 and 1200 px).
+- **Photographs and portraits**: all photographs (`PHOTOS` in `site_config.py`) are self-hosted in
+  `assets/img/photos/` as `{key}-{width}.avif/.webp/.jpg`, so the pages load nothing from third parties. The firm
+  sent its own on 21 November as compressed WhatsApp copies (`door`, `street`, `panorama`, and `herostill`, the
+  home hero photograph, which is the first frame of a 480p film): replace them with the originals when they
+  arrive, under the same names, in the same three formats (the build uses the widths it finds on disk), and
+  adjust `alt` and `pos`. `courtyard` (Capabilities) and `window` (Industries) are free-licence Pexels
+  photographs, placed in the page header by `PAGE_PHOTOS`; their source pages are noted in `site_config.py`.
+  Portraits: `PORTRAITS[...]["src"]`, served as AVIF/WebP with a JPEG fallback at 640 and 800 px.
 - **careers@babalawfirm.net**: confirm it is active and monitored.
 
 ## Dated information (review every three months)
