@@ -93,11 +93,12 @@ preview 404 page sends those two old addresses on instead (`LEGACY_404_REDIRECTS
   Policies; show "Last updated" only when a policy is later amended.
 - **Photographs and portraits**: all photographs (`PHOTOS` in `site_config.py`) are self-hosted in
   `assets/img/photos/` as `{key}-{width}.avif/.webp/.jpg`, so the pages load nothing from third parties. The firm
-  sent its own on 21 November as compressed WhatsApp copies (`door`, `street`, `panorama`, and `herostill`, the
-  home hero photograph, which is the first frame of a 480p film): replace them with the originals when they
-  arrive, under the same names, in the same three formats (the build uses the widths it finds on disk), and
-  adjust `alt` and `pos`. `courtyard` (Capabilities) and `window` (Industries) are free-licence Pexels
-  photographs, placed in the page header by `PAGE_PHOTOS`; their source pages are noted in `site_config.py`.
+  sent its own on 21 November as compressed WhatsApp copies (`door`, `street`, `panorama`): replace them with the
+  originals when they arrive, under the same names, in the same three formats (the build uses the widths it finds
+  on disk), and adjust `alt` and `pos`. The home hero (`hero`, 2400 px) is a free-licence Unsplash photograph;
+  `courtyard` (Capabilities), `window` (Industries) and `alley` (Regulatory Compliance & Sanctions) are
+  free-licence Pexels photographs, placed in the page header by `PAGE_PHOTOS`. Their sources are noted in
+  `site_config.py`.
   Portraits: `PORTRAITS[...]["src"]`, served as AVIF/WebP with a JPEG fallback at 640 and 800 px.
 - **careers@babalawfirm.net**: confirm it is active and monitored.
 

@@ -350,7 +350,7 @@ def render_home(ctx, page):
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("herostill", "100vw", h, eager=True)}</div>
+  <div class="hero-media">{img("hero", "100vw", h, eager=True)}</div>
   <div class="container hero-content">
     <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
     <div class="hero-sub">

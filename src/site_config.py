@@ -68,11 +68,14 @@ OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "de
 # export it as AVIF, WebP and JPEG at several widths under the same name and adjust "alt" and "pos".
 PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
 PHOTOS = {
+    # Home hero (since 24 November 2026): Hani chose this sharper photograph over the film's first frame, which is
+    # only 854 px wide (the client's request of 23 November asks for at least 1920 px). It is the free-licence stock
+    # photograph that was the home hero until 21 November (files restored from commit c5904c0~1), 2400 x 1600 px:
+    # Unsplash image photo-1561760041-f446e77d0885; the Unsplash licence (https://unsplash.com/license) allows
+    # commercial use without attribution. "Damascus at night" rests on the photographer's own location tag.
+    "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
     # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. Replace with the originals when they arrive.
-    # Home hero photograph (client request of 23 November 2026, replacing the hero film): the film's opening view,
-    # Damascus at night from above, as a sharp still.
-    "herostill": {"alt": "Damascus at night, seen from above", "pos": "50% 50%"},
     # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
     # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
     # the picture's middle) and a least-squares fit through 13 points on the edge gives the centre height 536.3.
