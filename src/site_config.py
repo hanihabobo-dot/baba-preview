@@ -58,8 +58,8 @@ FORM_ENDPOINT = ""
 # cookie it finds, and only those.
 COOKIE_REGISTER = [
     {"name": "blf-consent-v2", "provider": "Baba Law Firm",
-     "purpose": "Records your choices in Cookie Settings (kept in your browser's local storage)",
-     "category": "Strictly necessary", "duration": "Until you clear your browser's storage"},
+     "purpose": "Records your choices in Cookie Settings (kept in your browser’s local storage)",
+     "category": "Strictly necessary", "duration": "Until you clear your browser’s storage"},
 ]
 OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "description": "..."}]
 
@@ -70,7 +70,8 @@ PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each k
 PHOTOS = {
     # Home hero (since 24 November 2026): Hani chose this sharper photograph over the film's first frame, which is
     # only 854 px wide (the client's request of 23 November asks for at least 1920 px). It is the free-licence stock
-    # photograph that was the home hero until 21 November (files restored from commit c5904c0~1), 2400 x 1600 px:
+    # photograph that was the home hero until 21 November (files restored from commit c5904c0~1; AVIF files re-encoded
+    # smaller on 24 November), 2400 x 1600 px:
     # Unsplash image photo-1561760041-f446e77d0885; the Unsplash licence (https://unsplash.com/license) allows
     # commercial use without attribution. "Damascus at night" rests on the photographer's own location tag.
     "hero": {"alt": "Damascus at night", "pos": "60% 55%"},

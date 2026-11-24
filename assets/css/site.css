@@ -855,9 +855,10 @@ html.menu-open .wa-float { display: none; }
   background: linear-gradient(to top, rgba(16, 28, 44, 0.9) 0%, rgba(16, 28, 44, 0.8) 38%, rgba(16, 28, 44, 0.7) 66%, rgba(16, 28, 44, 0.56) 100%);
 }
 /* Phones and upright tablets: behind the text the photograph would be cropped to a thin, enlarged strip.
-   It sits whole (3:2), edge to edge, under the header, and fades into navy above the text. */
+   It sits whole (3:2), edge to edge, under the header, and fades into navy above the text. On a phone held
+   sideways it is at most 60% of the screen's height (cropped top and bottom), so the headline still shows. */
 @media (max-width: 959px) {
-  .page-home .hero { --hero-photo-h: calc(100vw * 2 / 3); background: var(--navy); }
+  .page-home .hero { --hero-photo-h: min(calc(100vw * 2 / 3), 60svh); background: var(--navy); }
   .page-home .hero-media { inset: var(--header-h) 0 auto; height: var(--hero-photo-h); overflow: hidden; }
   .page-home .hero-media::after { background: linear-gradient(to top, rgb(16, 28, 44) 0%, rgba(16, 28, 44, 0.3) 26%, rgba(16, 28, 44, 0.12) 100%); }
   .page-home .hero-content { padding-top: calc(var(--header-h) + var(--hero-photo-h) + 20px); }
@@ -1107,8 +1108,8 @@ html.menu-open .wa-float { display: none; }
 @media (min-width: 960px) and (max-width: 1199px) { .practice-hero .container { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); } }
 /* With an arched photograph (PAGE_PHOTOS in site_config.py): phones show it under the tagline; from 600 px it
    stands in the left column beside the title and tagline, and from 960 px beside the introduction too. The text
-   starts level with the top of the photograph: an empty last row beside it takes up any height the text lacks,
-   so the title and tagline are never pushed apart. */
+   starts level with the top of the photograph: an empty row beside it (under the tagline from 600 px, under the
+   introduction from 960 px) takes up any height the text lacks, so the title and tagline are never pushed apart. */
 .page-hero--photo .head-photo { margin: clamp(24px, 4vw, 32px) 0; }
 @media (min-width: 600px) {
   .page-hero--photo .container {
@@ -1201,21 +1202,6 @@ html.menu-open .wa-float { display: none; }
 .contact-hero { padding-block: clamp(56px, 8vw, 120px) clamp(48px, 6vw, 88px); }
 .contact-hero + .contact-top { padding-top: clamp(40px, 5vw, 64px); }   /* Get in Touch follows the heading closely */
 
-/* The contact line above the form, under the hero's rule: one line from 1024px, one item per line below */
-.enquiry-quick {
-  grid-column: 1 / -1; display: grid; margin: 0; padding: 12px 0;
-  font-size: var(--fs-small); line-height: 1.6; color: var(--ink-soft); font-variant-numeric: lining-nums;
-}
-.enquiry-quick a { display: inline-flex; align-items: center; min-height: 40px; color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
-.enquiry-quick a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
-.enquiry-quick-item { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.4em; min-height: 40px; }
-.enquiry-quick-sep { color: var(--stone); }
-.enquiry-quick-dot { display: none; color: var(--bronze); }
-@media (min-width: 1024px) {
-  .enquiry-quick { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; }
-  .enquiry-quick-dot { display: inline; }
-}
-
 /* ---------- Get in Touch + Contact Details (under the heading) ---------- */
 .contact-top-grid { display: grid; gap: var(--s-6) var(--col-gap); }
 @media (min-width: 1024px) { .contact-top-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(48px, 7vw, 112px); } }
@@ -1238,8 +1224,7 @@ html.menu-open .wa-float { display: none; }
 .method-icon { grid-column: 1; color: var(--bronze-ink); margin-bottom: 10px; }
 .method-icon .icon { width: 26px; height: 26px; }
 .method-label { grid-column: 1; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; line-height: 1.4; }
-.method-value { grid-column: 1; font-family: var(--serif); font-size: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; font-variant-numeric: lining-nums; }
-.method-arrow { grid-column: 2; grid-row: 1 / span 3; align-self: end; color: var(--bronze); }
+.method-arrow { grid-column: 2; grid-row: 1 / span 2; align-self: end; color: var(--bronze); }
 .method-arrow .arrow { width: 22px; height: 22px; transition: transform .35s var(--ease); }
 .method:hover .method-arrow .arrow { transform: translateX(4px); }
 .contact-caution { margin-top: var(--s-4); padding: 18px 20px; border-left: 2px solid var(--bronze); background: rgba(184, 176, 164, 0.16); font-size: var(--fs-small); line-height: 1.6; color: var(--ink-soft); max-width: 44em; }
@@ -1250,6 +1235,11 @@ html.menu-open .wa-float { display: none; }
 .office-label { color: var(--ink-soft); }
 .office-line a { display: inline-flex; align-items: center; min-height: 40px; white-space: nowrap; color: var(--navy); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
 .office-line a:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze); }
+/* Phones: the two telephone numbers one under the other, without the bar that would hang at the end of a line */
+@media (max-width: 479px) {
+  .office-line .cred-sep { display: none; }
+  .office-line .cred-sep + a { display: flex; width: fit-content; }
+}
 
 /* ---------- Send an Enquiry + What Happens Next ---------- */
 .enquiry-grid { display: grid; gap: var(--s-6) var(--col-gap); }

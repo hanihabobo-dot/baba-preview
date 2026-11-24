@@ -8,6 +8,11 @@ python3 src/build.py --production  # launch build: indexable, robots.txt lists t
 python3 src/build.py --set-password  # set or change the preview password, then build the preview
 ```
 
+The production build also writes `.htaccess` for Apache / cPanel hosting (`production_htaccess()` in
+`build.py`): HTTPS and the bare domain, extensionless addresses, the 404 page, security headers (HSTS,
+nosniff, Referrer-Policy, frame protection, Permissions-Policy), cache rules, MIME types and compression.
+`src/package_production.py` makes the upload ZIP from a production build without touching the preview.
+
 Python 3.9+ only; no other dependencies.
 
 ## Where things live
@@ -38,8 +43,9 @@ Plain lines are paragraphs. **bold**, *italic*, and " \\ " for a line break.
 
 `contact.txt` keeps the order of the client's document, and the page follows it (client request of
 21 November, replacing the form-first order of 29 October): Get in Touch, Contact Details, Send an Enquiry,
-What Happens Next, Visit Our Office. The second paragraph of Send an Enquiry (Telephone · Email · Video-call
-meetings) is the line above the form, and the Get in Touch caution is shown beneath the form. The Quick Contact
+What Happens Next, Visit Our Office. Since the client's request of 23 November, Get in Touch has two buttons
+without the address or the number on them, Contact Details run name, address, P.O. Box, Telephone, Fax, and
+there is no contact line above the form. The Get in Touch caution is shown beneath the form. The Quick Contact
 QR code beside the map is `assets/img/qr/email-qr.svg`, made by `src/make_email_qr.py` (see that file).
 
 Two formatting slips in the supplied PDF were normalised, without changing any words:

@@ -159,6 +159,9 @@ def jpeg_size(path):
             i += 1
             continue
         marker = data[i + 1]
+        if marker == 0xFF:          # fill byte before a marker
+            i += 1
+            continue
         if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
             return int.from_bytes(data[i + 7:i + 9], "big"), int.from_bytes(data[i + 5:i + 7], "big")
         i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
@@ -178,7 +181,6 @@ def header_photo(page):
     k = max(1.0, (w / h) / (4 / 5))
     sizes = f"(min-width: 960px) {round(320 * k)}px, {round(240 * k)}px"
     return f'<figure class="head-photo arch-crop">{img(key, sizes, page["href"], eager=True)}</figure>'
-
 
 
 def portrait(slug, name, frm, role=""):
@@ -781,20 +783,21 @@ def render_contact(ctx, page):
     git = d.section("Get in Touch")
     ps = [b for b in git.blocks if b.kind == "p"]
     ctas = [strip_arrow(b.text) for b in git.blocks if b.kind == "cta"]
-    # Blocks as supplied: introduction, "Send Us an Email ->", address, "Contact Us on WhatsApp ->", number, caution
-    intro_p, email_p, wa_p, notice_p = ps[0], ps[1], ps[2], ps[3]
+    # Blocks as supplied: introduction, "Send Us an Email ->", "Contact Us on WhatsApp ->", caution. Two buttons only,
+    # without the address or the number on them (client request of 23 November); both are in the menu and the footer.
+    if len(ps) != 2 or len(ctas) != 2:
+        raise ValueError("Get in Touch: expected an introduction, two buttons and the caution")
+    intro_p, notice_p = ps
     methods = f'''
       <ul class="methods" role="list">
         <li><a class="method" href="{esc(C.EMAIL_HREF)}">
           <span class="method-icon">{ICON_MAIL}</span>
           <span class="method-label">{esc(ctas[0])}</span>
-          <span class="method-value">{esc(plain(email_p.text)).replace("@", "@<wbr>")}</span>
           <span class="method-arrow">{ARROW}</span>
         </a></li>
         <li><a class="method" href="{esc(C.WHATSAPP_HREF)}" rel="noopener">
           <span class="method-icon">{ICON_CHAT}</span>
           <span class="method-label">{esc(ctas[1])}</span>
-          <span class="method-value">{esc(plain(wa_p.text))}</span>
           <span class="method-arrow">{ARROW}</span>
         </a></li>
       </ul>'''
@@ -807,21 +810,29 @@ def render_contact(ctx, page):
     </section>'''
 
     det = d.section("Contact Details")
-    lines = det.blocks[0].text.split(" \\\\ ")
-    firm = plain(lines[0])
-    tel_label, tel_nums = lines[1].split(": ", 1)
-    tel_html = '<span class="cred-sep"> | </span>'.join(
-        f'<a href="tel:{dict(C.PHONES)[n.strip()]}">{esc(n.strip())}</a>' for n in tel_nums.split("|"))
+    # In the order of the copy (client request of 23 November): name, address, P.O. Box, Telephone, Fax. A line
+    # "Label: value" shows its label like Telephone; the telephone numbers are links, and a number that is not in
+    # C.PHONES stops the build.
+    firm, *lines = det.blocks[0].text.split(" \\\\ ")
+    office_lines = []
+    for line in lines:
+        label, sep, value = line.partition(": ")
+        if not sep:
+            office_lines.append(nowrap(esc(line)))
+            continue
+        if label == "Telephone":
+            value_html = '<span class="cred-sep"> | </span>'.join(
+                f'<a href="tel:{dict(C.PHONES)[n.strip()]}">{esc(n.strip())}</a>' for n in value.split("|"))
+        else:
+            value_html = esc(value)
+        office_lines.append(f'<span class="office-label">{esc(label)}:</span> {value_html}')
+    office_html = "".join(f'\n        <p class="office-line">{x}</p>' for x in office_lines)
     det_html = f'''
     <section class="contact-details" aria-labelledby="contact-details">
       <h2 class="label sec-label" id="contact-details">{esc(det.heading)}</h2>
       <p class="sec-tagline">{inline(det.tagline)}</p>
       <address class="office-card">
-        <p class="office-firm">{esc(firm)}</p>
-        <p class="office-line"><span class="office-label">{esc(tel_label)}:</span> {tel_html}</p>
-        <p class="office-line">{nowrap(esc(lines[2]))}</p>
-        <p class="office-line">{esc(lines[3])}</p>
-        <p class="office-line">{esc(lines[4])}</p>
+        <p class="office-firm">{esc(plain(firm))}</p>{office_html}
       </address>
     </section>'''
     top = f'''
@@ -832,20 +843,20 @@ def render_contact(ctx, page):
 </section>'''
 
     enq = d.section("Send an Enquiry")
-    # Blocks as supplied: introduction, the contact line (29 October), the fields, then the lines after the form
+    # Blocks as supplied: introduction, the fields, then the lines after the form. The contact line that stood above
+    # the form was removed on the client's request of 23 November.
     fields_at = next(i for i, b in enumerate(enq.blocks) if b.kind == "ul")
     before = [b for b in enq.blocks[:fields_at] if b.kind == "p"]
     fields = enq.blocks[fields_at].items
     form = enquiry_form(ctx, page, fields)
     after = "".join(para(b.text, cls="form-after") for b in enq.blocks[fields_at:] if b.kind == "p")
-    quick = "".join("\n    " + contact_line(b.text) for b in before[1:])
     # The caution of Get in Touch is shown once, directly beneath the form (review of 24 September), where it is
     # read before the enquiry is sent.
     nxt = d.section("What Happens Next")
     steps = lead_items(nxt.blocks[0].items, "steps", "step-name", "step-desc", numbered=True, tag="ol")
     enquiry = f'''
 <section class="section enquiry" aria-label="{esc(enq.heading)}; {esc(nxt.heading)}">
-  <div class="container enquiry-grid">{quick}
+  <div class="container enquiry-grid">
     <section class="enquiry-main" aria-labelledby="send-an-enquiry">
       <h2 class="label sec-label" id="send-an-enquiry">{esc(enq.heading)}</h2>
       <p class="sec-tagline">{inline(enq.tagline)}</p>
@@ -907,20 +918,6 @@ def quick_contact(h):
           <a class="quick-contact-mail" href="{esc(C.EMAIL_HREF)}">{C.EMAIL}</a>
         </div>
       </section>'''
-
-
-def contact_line(text):
-    """'Telephone A | B · Email X · …' above the form: the numbers and the address as links.
-    A number that is not in C.PHONES stops the build, as in Contact Details."""
-    tels = dict(C.PHONES)
-    links = {n: f'<a href="tel:{tels[n]}">{n}</a>' for n in re.findall(r"\+\d[\d ]*\d", text)}
-    links.update(enquiry_mail_links(text) or {})
-    parts = []
-    for p in text.split(" · "):
-        p_html = inline(p, {k: v for k, v in links.items() if k in p} or None)
-        p_html = p_html.replace(" | ", '<span class="enquiry-quick-sep" aria-hidden="true"> | </span>')
-        parts.append(f'<span class="enquiry-quick-item">{p_html}</span>')
-    return '<p class="enquiry-quick">' + '<span class="enquiry-quick-dot" aria-hidden="true"> · </span>'.join(parts) + "</p>"
 
 
 def map_block(ctx, page):

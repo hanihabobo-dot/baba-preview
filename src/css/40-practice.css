@@ -16,8 +16,8 @@
 @media (min-width: 960px) and (max-width: 1199px) { .practice-hero .container { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); } }
 /* With an arched photograph (PAGE_PHOTOS in site_config.py): phones show it under the tagline; from 600 px it
    stands in the left column beside the title and tagline, and from 960 px beside the introduction too. The text
-   starts level with the top of the photograph: an empty last row beside it takes up any height the text lacks,
-   so the title and tagline are never pushed apart. */
+   starts level with the top of the photograph: an empty row beside it (under the tagline from 600 px, under the
+   introduction from 960 px) takes up any height the text lacks, so the title and tagline are never pushed apart. */
 .page-hero--photo .head-photo { margin: clamp(24px, 4vw, 32px) 0; }
 @media (min-width: 600px) {
   .page-hero--photo .container {
