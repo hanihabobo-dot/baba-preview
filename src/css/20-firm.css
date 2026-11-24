@@ -23,6 +23,30 @@
 }
 @media (max-width: 959px) { .firm-story-media { max-width: 380px; justify-self: start; } }
 
+/* Our Heritage: Tawfeeq Baba's two framed certificates under the story. From 960 px they sit in the story's columns
+   (the 1967 licence under the arch, the 1969 licence under the text), from 720 px in two equal columns, on phones one
+   above the other. Side by side, each figure shares the row's three grid rows (subgrid: frame, caption, link), so
+   the frames stand on one line and the captions and the links each start on one line, although the frames differ in
+   height and a caption may wrap. At most 460 px wide: the files are about 700 px wide, and larger they look soft. */
+.firm-certs { display: grid; gap: 40px; margin-top: clamp(48px, 6vw, 80px); }
+.firm-cert { margin: 0; width: 100%; max-width: 460px; }
+.firm-cert-img { display: block; cursor: zoom-in; }
+.firm-cert-img img { width: 100%; }
+.firm-cert-caption { margin-top: 14px; font-size: var(--fs-small); line-height: 1.55; color: var(--ink-soft); }
+.firm-cert-caption > span { display: block; }
+@media (min-width: 720px) {
+  .firm-certs { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto auto; gap: 0 var(--col-gap); }
+  .firm-cert { display: grid; grid-row: span 3; grid-template-rows: subgrid; }
+  .firm-cert-img { align-self: end; }
+  .firm-cert-caption { display: grid; grid-row: span 2; grid-template-rows: subgrid; align-items: start; }
+  .firm-cert-caption .link-arrow { justify-self: start; }
+}
+@media (min-width: 960px) {
+  .firm-certs { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(48px, 7vw, 112px); }
+  /* the 6fr column is 6/5 of the 5fr one: 5/6 of it keeps both certificates the same width */
+  .firm-cert + .firm-cert { max-width: min(460px, 83.333%); }
+}
+
 /* Our Leadership and Our Practice: ruled long-form sections */
 .firm-body { background: var(--ivory); }
 .firm-body .doc-sec .sec-tagline { font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.625rem); }

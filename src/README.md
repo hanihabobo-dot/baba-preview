@@ -104,7 +104,9 @@ preview 404 page sends those two old addresses on instead (`LEGACY_404_REDIRECTS
   on disk), and adjust `alt` and `pos`. The home hero (`hero`, 2400 px) is a free-licence Unsplash photograph;
   `courtyard` (Capabilities), `window` (Industries) and `alley` (Regulatory Compliance & Sanctions) are
   free-licence Pexels photographs, placed in the page header by `PAGE_PHOTOS`. Their sources are noted in
-  `site_config.py`.
+  `site_config.py`. Tawfeeq Baba's two certificates under Our Heritage on Our Firm (`cert-licence`, `cert-bar`,
+  captions in `FIRM_CERTIFICATES`) were straightened out of one compressed photograph of both frames, about 700 px
+  wide each; each picture opens its largest JPEG for reading. Replace them with scans when they arrive.
   Portraits: `PORTRAITS[...]["src"]`, served as AVIF/WebP with a JPEG fallback at 640 and 800 px.
 - **careers@babalawfirm.net**: confirm it is active and monitored.
 

@@ -101,7 +101,23 @@ PHOTOS = {
     # alley: "Narrow Alleyway in Old Damascus, Syria" by Baraa Obied,
     #   https://www.pexels.com/photo/narrow-alleyway-in-old-damascus-syria-39344630/ (downloaded at 1600 x 2400)
     "alley": {"alt": "A quiet lane in old Damascus between banded stone and plastered house walls", "pos": "50% 60%"},
+    # Tawfeeq Baba's two certificates, shown under Our Heritage on Our Firm (client request of 23 November 2026, which
+    # asked for Our People; Hani placed them on Our Firm). The firm sent one photograph of both frames on a wall
+    # (24 November 2026, 1280 x 1280 px, a compressed copy). Each frame was cut out of it and straightened to a
+    # square-on view (perspective correction from the frame's outer edges; the 1967 licence's round seal and the 1969
+    # licence's round medallions come out round), with a light contrast and sharpening pass. About 700 px wide is all
+    # the photograph holds; replace with scans or the original photograph when they arrive.
+    "cert-licence": {"alt": "Framed Arabic certificate: Licence in Law awarded to Tawfeeq Baba by the University of "
+                            "Aleppo, 23 September 1967.", "pos": "50% 50%"},
+    "cert-bar": {"alt": "Framed Arabic certificate: Licence to Practise Law no. 164, issued to Tawfeeq Baba by the "
+                        "Aleppo Bar Association on 16 November 1969, with his photograph.", "pos": "50% 50%"},
 }
+
+# The certificates under Our Heritage, in date order: (key of PHOTOS, caption).
+FIRM_CERTIFICATES = [
+    ("cert-licence", "Licence in Law, University of Aleppo, 1967"),
+    ("cert-bar", "Licence to Practise Law, Aleppo Bar Association, 1969"),
+]
 
 # Arched photograph in a page's header, beside its title (client request of 23 November 2026).
 # Keys are page addresses as in build.registry(); values are keys of PHOTOS.

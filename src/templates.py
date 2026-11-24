@@ -131,8 +131,9 @@ def arch_fit(a, ratio=1.25):
             f"left:{left * 100:.2f}%;top:{top / ratio * 100:.2f}%")     # top is a share of the frame's height
 
 
-def img(key, sizes, frm, eager=False, cls=""):
-    """A self-hosted photograph as seen from the page `frm`: AVIF and WebP sources with a JPEG fallback."""
+def img(key, sizes, frm, eager=False, cls="", dims=None):
+    """A self-hosted photograph as seen from the page `frm`: AVIF and WebP sources with a JPEG fallback.
+    `dims` (width, height) adds the size attributes, so the page keeps the picture's space before it loads."""
     p = C.PHOTOS[key]
     widths = photo_widths(key)
     base = rel(frm, f"{C.PHOTO_DIR}/{key}")
@@ -140,6 +141,8 @@ def img(key, sizes, frm, eager=False, cls=""):
     fallback = max([w for w in widths if w <= 1600] or widths[:1])
     load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     c = f' class="{cls}"' if cls else ""
+    if dims:
+        c += ' width="{}" height="{}"'.format(*dims)
     if "place" in p:        # set by hand by Hani (alignment tool, removed after use; see git history); wins over the computed fit
         style = "position:absolute;max-width:none;height:auto;width:{width};left:{left};top:{top}".format(**p["place"])
     else:
@@ -181,6 +184,24 @@ def header_photo(page):
     k = max(1.0, (w / h) / (4 / 5))
     sizes = f"(min-width: 960px) {round(320 * k)}px, {round(240 * k)}px"
     return f'<figure class="head-photo arch-crop">{img(key, sizes, page["href"], eager=True)}</figure>'
+
+
+def certificate(key, caption, frm):
+    """A framed certificate (Our Firm, Our Heritage). The picture and the "View full size" link under the caption both
+    open the largest JPEG on its own, where a phone's browser lets the reader zoom in. The picture's link is left out
+    of the Tab order (the caption's link does the same job), but it stays a link with the picture's alt text."""
+    folder = Path(__file__).resolve().parent.parent / C.PHOTO_DIR
+    largest = f"{key}-{photo_widths(key)[-1]}.jpg"
+    full = rel(frm, f"{C.PHOTO_DIR}/{largest}")
+    picture = img(key, "(min-width: 500px) 460px, 100vw", frm, dims=jpeg_size(folder / largest))
+    return f'''
+    <figure class="firm-cert reveal">
+      <a class="firm-cert-img" href="{esc(full)}" tabindex="-1">{picture}</a>
+      <figcaption class="firm-cert-caption">
+        <span>{esc(caption)}</span>
+        {link_arrow(full, "View full size", hidden_suffix=f": {caption}")}
+      </figcaption>
+    </figure>'''
 
 
 def portrait(slug, name, frm, role=""):
@@ -486,6 +507,8 @@ def render_firm(ctx, page):
       <p class="sec-tagline">{inline(s.tagline)}</p>
       <div class="prose">{render_blocks(ctx, page, s.blocks)}</div>
     </div>
+  </div>
+  <div class="container firm-certs">{"".join(certificate(key, cap, h) for key, cap in C.FIRM_CERTIFICATES)}
   </div>
 </section>'''
 
