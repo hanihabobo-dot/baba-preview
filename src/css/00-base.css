@@ -66,9 +66,11 @@
   --section: clamp(72px, 9vw, 136px);
   --section-sm: clamp(48px, 6vw, 88px);
   --header-h: 84px;
+  --svh: 1vh;                 /* 1svh where the browser knows the unit (below) */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --radius: 2px;
 }
+@supports (height: 1svh) { :root { --svh: 1svh; } }
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -266,6 +268,7 @@ em, .italic { font-style: italic; }
 .link-arrow span { background: linear-gradient(var(--bronze), var(--bronze)) 0 100% / 0 1px no-repeat; transition: background-size .45s var(--ease); padding-bottom: 2px; }
 .link-arrow:hover span { background-size: 100% 1px; }
 .link-arrow .arrow { width: 18px; height: 18px; color: var(--bronze); transition: transform .35s var(--ease); }
+.link-arrow .ext { flex: none; width: 17px; height: 17px; color: var(--bronze); }
 .link-arrow:hover .arrow { transform: translateX(4px); }
 .section--navy .link-arrow, .on-dark .link-arrow, .page-hero--navy .link-arrow { color: var(--ivory); }
 .section--navy .link-arrow .arrow, .on-dark .link-arrow .arrow { color: var(--bronze-light); }
@@ -541,6 +544,10 @@ html.menu-open { overflow: hidden; }
 @media (min-width: 1100px) { .footer-top { grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 3fr) minmax(0, 3fr); align-items: start; } }
 .footer-brand .brand { color: var(--ivory); }
 .site-footer .brand-logo { height: 52px; }
+/* The Legal 500 under the logo (C.LEGAL500 in site_config.py, off by default) */
+.footer-l500 { display: flex; width: fit-content; align-items: center; min-height: 44px; margin-top: 14px; color: var(--stone); font-size: var(--fs-small); text-decoration: none; transition: color .3s var(--ease); }
+.footer-l500:hover { color: var(--ivory); text-decoration: underline; text-decoration-color: var(--bronze-light); }
+.footer-l500 img { display: block; height: 56px; width: auto; }
 .footer-place { margin: 12px 0 0; color: var(--stone); font-size: var(--fs-small); }
 .footer-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-3); }
 .footer-nav li:has(> a[href$="regulatory-compliance-sanctions"]) { grid-column: 1 / -1; }   /* the long label gets a row, not two lines */
@@ -601,11 +608,21 @@ html.menu-open { overflow: hidden; }
 
 /* ---------- Print ---------- */
 @media print {
-  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
+  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band, .skip-link { display: none !important; }
   main { padding-top: 0; }
   body { background: #fff; }
   .js .reveal, .js .reveal-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .section--navy, .page-hero--navy, .hero { background: #fff !important; color: #000 !important; }
+  .section--navy, .page-hero--navy, .hero, .cta-band--navy, .site-footer { background: #fff !important; color: #000 !important; }
+  .section--navy *, .cta-band--navy *, .site-footer * { color: #000 !important; }
+  /* the photo bands of Contact (their veils do not print) and the buttons: black text on white paper */
+  .visit-band-media, .map-pending-media, .contact-map { display: none !important; }   /* the map works on screen only */
+  .visit-band, .map-pending { min-height: 0 !important; background: #fff !important; }
+  .visit-band *, .map-pending *, .btn { color: #000 !important; }
+  .btn { background: none !important; border: 1px solid #000 !important; }
+  /* the home tagline and introduction are white on the photograph and on navy: black on paper, without the photo's height */
+  .hero-title, .hero-mark, .hero-intro p { color: #000 !important; text-shadow: none !important; }
+  .hero-stage { height: auto !important; }
+  .hero-actions { display: none !important; }
 }
 
 /* ---------- Review fixes, 9 Oct ---------- */

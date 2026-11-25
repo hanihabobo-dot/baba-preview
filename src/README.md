@@ -21,7 +21,7 @@ Python 3.9+ only; no other dependencies.
 |---|---|
 | Approved copy, one file per page | `src/content/**/*.txt` |
 | Titles and meta descriptions (Dr. Baba's tables) | `src/seo.json` |
-| Contact details, map pin, form endpoint, cookie register, photographs, portraits, capability groups | `src/site_config.py` |
+| Contact details, map pin, form endpoint, cookie register, Legal 500 switch, photographs, portraits, capability groups | `src/site_config.py` |
 | Page layouts | `src/templates.py` |
 | Styles (concatenated into `assets/css/site.css`) | `src/css/*.css` |
 | Behaviour (menu, consent, form, map, WhatsApp button above the cookie banner) | `assets/js/site.js` |
@@ -41,12 +41,22 @@ The wording is the approved copy of 19 October 2026 ("Website Content – Review
 Plain lines are paragraphs. **bold**, *italic*, and " \\ " for a line break.
 ```
 
+The Capabilities and Industries index pages read their tagline, introduction and closing Contact block from
+`capabilities/index.txt` and `industries/index.txt` (client's texts of 24 and 25 November 2026); the lists come from
+`CAPABILITIES`, `CAPABILITY_GROUPS` and `INDUSTRIES` in `site_config.py`. The Capabilities introduction gives the
+number of practice areas in words ("seventeen"): the build stops if it no longer matches `CAPABILITIES`.
+
 `contact.txt` keeps the order of the client's document, and the page follows it (client request of
 21 November, replacing the form-first order of 29 October): Get in Touch, Contact Details, Send an Enquiry,
-What Happens Next, Visit Our Office. Since the client's request of 23 November, Get in Touch has two buttons
+What Happens Next, Visit Our Office. The two introductory paragraphs stand in the heading, beside the arched
+photograph. Since the client's request of 23 November, Get in Touch has two buttons
 without the address or the number on them, Contact Details run name, address, P.O. Box, Telephone, Fax, and
 there is no contact line above the form. The Get in Touch caution is shown beneath the form. The Quick Contact
 QR code beside the map is `assets/img/qr/email-qr.svg`, made by `src/make_email_qr.py` (see that file).
+
+The picture shown when a link is shared, `assets/img/og-image.png` (1200 × 630), carries the home tagline and
+"Damascus · Since" `FOUNDING_YEAR`. After changing either, run `python3 src/make_og_image.py` (needs Node.js with
+Playwright) and rebuild; the pages link it with `?v=` and a hash of the file, so apps fetch the new picture.
 
 Two formatting slips in the supplied PDF were normalised, without changing any words:
 the Energy & Power lead-in "Oil and gas exploration, production and refining." is bold like
@@ -98,16 +108,25 @@ preview 404 page sends those two old addresses on instead (`LEGACY_404_REDIRECTS
 - **Policies**: record the launch date internally as the effective date of the Privacy and Cookie
   Policies; show "Last updated" only when a policy is later amended.
 - **Photographs and portraits**: all photographs (`PHOTOS` in `site_config.py`) are self-hosted in
-  `assets/img/photos/` as `{key}-{width}.avif/.webp/.jpg`, so the pages load nothing from third parties. The firm
-  sent its own on 21 November as compressed WhatsApp copies (`door`, `street`, `panorama`): replace them with the
-  originals when they arrive, under the same names, in the same three formats (the build uses the widths it finds
-  on disk), and adjust `alt` and `pos`. The home hero (`hero`, 2400 px) is a free-licence Unsplash photograph;
-  `courtyard` (Capabilities), `window` (Industries) and `alley` (Regulatory Compliance & Sanctions) are
-  free-licence Pexels photographs, placed in the page header by `PAGE_PHOTOS`. Their sources are noted in
-  `site_config.py`. Tawfeeq Baba's two certificates under Our Heritage on Our Firm (`cert-licence`, `cert-bar`,
-  captions in `FIRM_CERTIFICATES`) were straightened out of one compressed photograph of both frames, about 700 px
-  wide each; each picture opens its largest JPEG for reading. Replace them with scans when they arrive.
+  `assets/img/photos/` as `{key}-{width}.avif/.webp/.jpg`, so the pages load nothing from third parties. Replace each
+  with its original when it arrives, under the same name, in the same three formats (the build uses the widths it finds
+  on disk), and adjust `alt` and `pos`. Only compressed copies (sent over WhatsApp) have arrived so far:
+  - `hero` (home) and `panorama` (Visit Our Office band on Contact, which uses the `hero` files through `"file"`):
+    Damascus at dusk from Mount Qasioun, Adobe Stock 56856854, licensed by the firm. 1280 px only, so the hero is
+    soft on large and high-density screens: the licensed full-size file is needed (640-2400 px for the hero).
+  - The arched photographs beside the page titles, placed by `PAGE_PHOTOS`: `office` (Contact, the firm's own
+    photograph), `hejaz` (Capabilities), `umayyad` (Industries) and `central-bank` (Regulatory Compliance & Sanctions),
+    cropped to 4:5 as in the client's document of 25 November 2026. The last three are stills from the firm's film of
+    Damascus, used at the firm's request. 420-784 px wide after cropping.
+  - `door`, `street` (21 November) and Tawfeeq Baba's two certificates under Our Heritage on Our Firm (`cert-licence`,
+    `cert-bar`, captions in `FIRM_CERTIFICATES`; straightened out of one photograph of both frames, about 700 px wide
+    each; each picture opens its largest JPEG for reading). Replace the certificates with scans when they arrive.
   Portraits: `PORTRAITS[...]["src"]`, served as AVIF/WebP with a JPEG fallback at 640 and 800 px.
+- **The Legal 500**: `LEGAL500` in `site_config.py`, an optional link to the firm's page in the guide, is off. Switch
+  it on only when the client asks, with `url` set to that page: the home photograph then shows "Legal 500" at its foot
+  on the right, the footer of every page "The Legal 500", and Our Firm a line linking to the firm's page. The client's
+  notes of 24 November ask, following The Legal 500's logo rules, not to describe the firm as "ranked" or
+  "recommended" and not to use their logos unless the firm is actually ranked; set `badge` to a logo file only then.
 - **careers@babalawfirm.net**: confirm it is active and monitored.
 
 ## Dated information (review every three months)

@@ -12,8 +12,8 @@
 .contact-top .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .contact-top .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .contact-git-intro { color: var(--ink-soft); max-width: 38em; }
-/* The page introduction, moved here from the hero so that the form follows the heading */
-.contact-welcome { grid-column: 1 / -1; max-width: 44rem; }
+/* The page introduction, in the heading beside the arched photograph (40-practice.css places it) */
+.contact-welcome { max-width: 44rem; }
 .contact-welcome p { font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
 .contact-welcome p:first-child { color: var(--ink); }
 
@@ -129,7 +129,6 @@
 .contact-map-note a { color: var(--ivory); text-decoration-color: var(--bronze-light); }
 html:not(.js) [data-map-load], html:not(.js) .contact-map-note { display: none; }   /* the map needs site.js; Get Directions still works */
 .map-directions { margin: 14px 0 0; }
-.map-directions .ext { width: 17px; height: 17px; color: var(--bronze); }
 
 /* Until then: the office address over the city, with no request to Google */
 .map-pending { position: relative; display: grid; align-items: end; min-height: 420px; height: 100%; overflow: hidden; border-radius: var(--radius); background: var(--navy); color: var(--ivory); isolation: isolate; }

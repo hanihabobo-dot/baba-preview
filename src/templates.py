@@ -101,6 +101,20 @@ def asset_version():
     return _ASSET_VERSION
 
 
+_OG_IMAGE = None
+
+
+def og_image():
+    """Absolute address of the share picture, with ?v=<hash of the file>: a redrawn picture (src/make_og_image.py)
+    gets a new address, so messaging apps and social sites do not keep showing the old one."""
+    global _OG_IMAGE
+    if _OG_IMAGE is None:
+        import hashlib
+        f = Path(__file__).resolve().parent.parent / "assets" / "img" / "og-image.png"
+        _OG_IMAGE = f"{C.DOMAIN}/assets/img/og-image.png?v={hashlib.sha256(f.read_bytes()).hexdigest()[:10]}"
+    return _OG_IMAGE
+
+
 def photo_widths(key):
     """Widths of the files {key}-{w}.jpg in C.PHOTO_DIR, ascending; each width must also have an .avif and a .webp."""
     folder = Path(__file__).resolve().parent.parent / C.PHOTO_DIR
@@ -133,10 +147,11 @@ def arch_fit(a, ratio=1.25):
 
 def img(key, sizes, frm, eager=False, cls="", dims=None):
     """A self-hosted photograph as seen from the page `frm`: AVIF and WebP sources with a JPEG fallback.
-    `dims` (width, height) adds the size attributes, so the page keeps the picture's space before it loads."""
+    `dims` (width, height) adds the size attributes, so the page keeps the picture's space before it loads.
+    A photograph with "file" uses that key's files (same picture, own alt text and position)."""
     p = C.PHOTOS[key]
-    widths = photo_widths(key)
-    base = rel(frm, f"{C.PHOTO_DIR}/{key}")
+    widths = photo_widths(p.get("file", key))
+    base = rel(frm, f"{C.PHOTO_DIR}/{p.get('file', key)}")
     srcset = lambda ext: esc(", ".join(f"{base}-{w}.{ext} {w}w" for w in widths))
     fallback = max([w for w in widths if w <= 1600] or widths[:1])
     load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
@@ -231,6 +246,40 @@ def link_arrow(href, label, extra_cls="", hidden_suffix=""):
 
 def cta_href(ctx, page, label):
     return rel(page["href"], CTA_TARGETS[label])
+
+
+# ---------------------------------------------------------------- The Legal 500 (C.LEGAL500, off by default)
+
+def legal500_on():
+    """True once C.LEGAL500 is switched on; stops the build if it is on without the firm's page (or its badge file)."""
+    L = C.LEGAL500
+    if not L["on"]:
+        return False
+    if not L["url"].startswith("https://"):
+        raise SystemExit('LEGAL500 is on: set "url" to the firm\'s page in The Legal 500 (https://...)')
+    if L["badge"] and not (Path(__file__).resolve().parent.parent / L["badge"]).is_file():
+        raise SystemExit(f'LEGAL500: badge file not found: {L["badge"]}')
+    return True
+
+
+def legal500_line():
+    """Our Firm: a line linking to the firm's page in The Legal 500 (C.LEGAL500["firm_line"]); "" while off."""
+    if not legal500_on():
+        return ""
+    return (f'<p class="cta-line firm-l500"><a class="link-arrow" href="{esc(C.LEGAL500["url"])}" target="_blank" '
+            f'rel="noopener"><span>{esc(C.LEGAL500["firm_line"])}<span class="visually-hidden"> (opens in a new tab)'
+            f'</span></span>{EXT}</a></p>')
+
+
+def legal500_mark(frm, cls, text):
+    """The firm's page in The Legal 500, opening in a new tab: the badge if one is set, else `text`; "" while off."""
+    if not legal500_on():
+        return ""
+    L = C.LEGAL500
+    inner = (f'<img src="{esc(rel(frm, L["badge"]))}" alt="{esc(L["badge_alt"])}" decoding="async">' if L["badge"]
+             else f'<span>{esc(text)}</span>')
+    return (f'<a class="{cls}" href="{esc(L["url"])}" target="_blank" rel="noopener">{inner}'
+            f'<span class="visually-hidden"> (opens in a new tab)</span></a>')
 
 
 def email_links(text):
@@ -371,17 +420,21 @@ def render_home(ctx, page):
     d = page["doc"]
     h = page["href"]
     intro = "".join(para(b.text) for b in d.intro if b.kind == "p")
+    # The photograph with the tagline at its foot, bottom left, and (C.LEGAL500, off by default) "Legal 500" bottom
+    # right, as in the client's mock-up (request of 25 November 2026); the introduction and buttons follow on navy.
     hero = f'''
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{img("hero", "100vw", h, eager=True)}</div>
-  <div class="container hero-content">
-    <h1 class="display hero-title" id="hero-title">{two_lines(d.tagline)}</h1>
-    <div class="hero-sub">
-      <div class="hero-intro">{intro}</div>
-      <div class="hero-actions">
-        {btn(rel(h, "capabilities/"), "Explore Our Capabilities", "btn--light")}
-        {btn(rel(h, "contact"), "Contact Us", "btn--ghost-light")}
-      </div>
+  <div class="hero-stage">
+    <div class="hero-media">{img("hero", "100vw", h, eager=True)}</div>
+    <div class="container hero-content">
+      <h1 class="hero-title" id="hero-title">{two_lines(d.tagline)}</h1>{legal500_mark(h, "hero-mark", "Legal 500")}
+    </div>
+  </div>
+  <div class="container hero-sub">
+    <div class="hero-intro">{intro}</div>
+    <div class="hero-actions">
+      {btn(rel(h, "capabilities/"), "Explore Our Capabilities", "btn--light")}
+      {btn(rel(h, "contact"), "Contact Us", "btn--ghost-light")}
     </div>
   </div>
 </section>'''
@@ -493,7 +546,7 @@ def render_firm(ctx, page):
     intro = f'''
     <div class="firm-hero-body">
       {para(ps[0].text, cls="serif-lg firm-hero-lead")}
-      <div class="prose firm-hero-text">{"".join(para(b.text) for b in ps[1:])}</div>
+      <div class="prose firm-hero-text">{"".join(para(b.text) for b in ps[1:])}{legal500_line()}</div>
     </div>'''
     hero = page_hero(ctx, page, d, intro_html=intro, cls="firm-hero")
 
@@ -734,6 +787,11 @@ def render_practice(ctx, page):
     return hero + body + related + cta_band(ctx, page, contact)
 
 
+NUMBER_WORDS = {w: n for n, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen "
+    "eighteen nineteen twenty".split())}
+
+
 def render_index(ctx, page):
     kind = page["type"]            # cap-index | ind-index
     items = C.CAPABILITIES if kind == "cap-index" else C.INDUSTRIES
@@ -777,19 +835,31 @@ def render_index(ctx, page):
       </ol>
     </section>''')
         body = "".join(groups)
+    d = page["doc"]
+    # The introduction may give the number of entries in words ("seventeen areas of practice"): the build stops if
+    # an entry is added or removed and the sentence is not changed with it.
+    said = re.search(r"\b([A-Za-z]+|\d+) areas of practice\b", " ".join(b.text for b in d.intro if b.kind == "p"))
+    if said and (int(said[1]) if said[1].isdigit() else NUMBER_WORDS.get(said[1].lower())) != len(items):
+        raise ValueError(f'{page["href"]}: the introduction says "{said[0]}", but {len(items)} entries are listed')
     photo = header_photo(page)
-    # Title, then the photograph, then the links to the groups: the order on a phone. From 600 px the photograph
-    # stands in the left column and the title and links sit at its foot (40-practice.css).
+    tagline = f'<p class="page-tagline">{inline(d.tagline)}</p>' if d.tagline else ""
+    intro = ('<div class="page-intro index-intro">' + "".join(para(b.text, cls="lead") for b in d.intro if b.kind == "p")
+             + "</div>") if d.intro else ""
+    # Title, tagline, photograph, introduction, then the links to the groups: the order on a phone. From 600 px the
+    # photograph stands in the left column, with the text beside it, as on the other pages with a header photograph
+    # (40-practice.css). The closing Contact block follows the lists (client request of 24 November 2026).
     return f'''
 <section class="index-page{' index-page--photo' if photo else ''}" aria-labelledby="page-title">
   <div class="container">
     {breadcrumb_html(page)}
     <div class="index-head">
       <h1 class="h1 page-title" id="page-title">{esc(page["h1"])}</h1>
-      {photo}{jump}
+      {tagline}
+      {photo}
+      {intro}{jump}
     </div>{body}
   </div>
-</section>'''
+</section>''' + cta_band(ctx, page, d.section("Contact"))
 
 
 # ---------------------------------------------------------------- contact
@@ -798,10 +868,11 @@ def render_contact(ctx, page):
     d = page["doc"]
     h = page["href"]
     # Section order as the client set it on 21 November: Contact (hero) -> Get in Touch -> Contact Details ->
-    # Send an Enquiry -> What Happens Next -> Visit Our Office. The hero keeps the title and tagline, and the two
-    # introductory paragraphs open the Get in Touch band.
-    hero = page_hero(ctx, page, d, cls="contact-hero", intro_html="")
+    # Send an Enquiry -> What Happens Next -> Visit Our Office. The hero holds the title, the tagline and the two
+    # introductory paragraphs, which stand beside the arched photograph from 960 px (as on the index pages).
     welcome = "".join(para(b.text) for b in d.intro if b.kind == "p")
+    hero = page_hero(ctx, page, d, cls="contact-hero",
+                     intro_html=f'<div class="page-intro contact-welcome">{welcome}</div>' if welcome else "")
 
     git = d.section("Get in Touch")
     ps = [b for b in git.blocks if b.kind == "p"]
@@ -861,7 +932,7 @@ def render_contact(ctx, page):
     top = f'''
 <section class="section section--white contact-top" aria-label="{esc(git.heading)}; {esc(det.heading)}">
   <div class="container contact-top-grid">
-    <div class="contact-welcome">{welcome}</div>{git_html}{det_html}
+    {git_html}{det_html}
   </div>
 </section>'''
 
@@ -1223,7 +1294,7 @@ def firm_node():
         "name": C.SITE_NAME,
         "url": C.DOMAIN + "/",
         "logo": C.DOMAIN + "/assets/img/logo/baba-law-firm-logo.png",
-        "image": C.DOMAIN + "/assets/img/og-image.png",
+        "image": og_image(),
         "foundingDate": C.FOUNDING_YEAR,
         "email": C.EMAIL,
         "telephone": C.PHONES[0][0],
@@ -1352,7 +1423,7 @@ def footer(ctx, page):
   <div class="ablaq-band" aria-hidden="true"></div>
   <div class="container footer-top">
     <div class="footer-brand">
-      <a class="brand" href="{esc(rel(h, ''))}"><svg class="brand-logo" viewBox="0 0 1230 314" aria-hidden="true" focusable="false"><use href="#baba-logo"/></svg><span class="visually-hidden">Baba Law Firm — home</span></a>
+      <a class="brand" href="{esc(rel(h, ''))}"><svg class="brand-logo" viewBox="0 0 1230 314" aria-hidden="true" focusable="false"><use href="#baba-logo"/></svg><span class="visually-hidden">Baba Law Firm — home</span></a>{legal500_mark(h, "footer-l500", "The Legal 500")}
     </div>
     <nav class="footer-nav" aria-label="Footer"><ul role="list">{nav}</ul></nav>
     <ul role="list" class="footer-contact">
@@ -1491,14 +1562,14 @@ def layout(ctx, page, main_html, body_class, overlay=False, logo_defs=""):
 <meta property="og:site_name" content="Baba Law Firm">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-{og_url}<meta property="og:image" content="{C.DOMAIN}/assets/img/og-image.png">
+{og_url}<meta property="og:image" content="{og_image()}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Baba Law Firm">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{desc}">
-<meta name="twitter:image" content="{C.DOMAIN}/assets/img/og-image.png">
+<meta name="twitter:image" content="{og_image()}">
 <meta name="theme-color" content="#101C2C">
 <link rel="icon" href="{a('assets/img/favicon.svg')}" type="image/svg+xml">
 <link rel="icon" href="{a('assets/img/favicon-32.png')}" sizes="32x32" type="image/png">

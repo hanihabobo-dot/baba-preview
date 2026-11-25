@@ -68,9 +68,11 @@
   --section: clamp(72px, 9vw, 136px);
   --section-sm: clamp(48px, 6vw, 88px);
   --header-h: 84px;
+  --svh: 1vh;                 /* 1svh where the browser knows the unit (below) */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --radius: 2px;
 }
+@supports (height: 1svh) { :root { --svh: 1svh; } }
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -268,6 +270,7 @@ em, .italic { font-style: italic; }
 .link-arrow span { background: linear-gradient(var(--bronze), var(--bronze)) 0 100% / 0 1px no-repeat; transition: background-size .45s var(--ease); padding-bottom: 2px; }
 .link-arrow:hover span { background-size: 100% 1px; }
 .link-arrow .arrow { width: 18px; height: 18px; color: var(--bronze); transition: transform .35s var(--ease); }
+.link-arrow .ext { flex: none; width: 17px; height: 17px; color: var(--bronze); }
 .link-arrow:hover .arrow { transform: translateX(4px); }
 .section--navy .link-arrow, .on-dark .link-arrow, .page-hero--navy .link-arrow { color: var(--ivory); }
 .section--navy .link-arrow .arrow, .on-dark .link-arrow .arrow { color: var(--bronze-light); }
@@ -543,6 +546,10 @@ html.menu-open { overflow: hidden; }
 @media (min-width: 1100px) { .footer-top { grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 3fr) minmax(0, 3fr); align-items: start; } }
 .footer-brand .brand { color: var(--ivory); }
 .site-footer .brand-logo { height: 52px; }
+/* The Legal 500 under the logo (C.LEGAL500 in site_config.py, off by default) */
+.footer-l500 { display: flex; width: fit-content; align-items: center; min-height: 44px; margin-top: 14px; color: var(--stone); font-size: var(--fs-small); text-decoration: none; transition: color .3s var(--ease); }
+.footer-l500:hover { color: var(--ivory); text-decoration: underline; text-decoration-color: var(--bronze-light); }
+.footer-l500 img { display: block; height: 56px; width: auto; }
 .footer-place { margin: 12px 0 0; color: var(--stone); font-size: var(--fs-small); }
 .footer-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-3); }
 .footer-nav li:has(> a[href$="regulatory-compliance-sanctions"]) { grid-column: 1 / -1; }   /* the long label gets a row, not two lines */
@@ -603,11 +610,21 @@ html.menu-open { overflow: hidden; }
 
 /* ---------- Print ---------- */
 @media print {
-  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band { display: none !important; }
+  .site-header, .mobile-menu, .cookie-banner, .cookie-dialog, .wa-float, .site-footer .footer-nav, .hero-media, .ablaq-band, .skip-link { display: none !important; }
   main { padding-top: 0; }
   body { background: #fff; }
   .js .reveal, .js .reveal-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .section--navy, .page-hero--navy, .hero { background: #fff !important; color: #000 !important; }
+  .section--navy, .page-hero--navy, .hero, .cta-band--navy, .site-footer { background: #fff !important; color: #000 !important; }
+  .section--navy *, .cta-band--navy *, .site-footer * { color: #000 !important; }
+  /* the photo bands of Contact (their veils do not print) and the buttons: black text on white paper */
+  .visit-band-media, .map-pending-media, .contact-map { display: none !important; }   /* the map works on screen only */
+  .visit-band, .map-pending { min-height: 0 !important; background: #fff !important; }
+  .visit-band *, .map-pending *, .btn { color: #000 !important; }
+  .btn { background: none !important; border: 1px solid #000 !important; }
+  /* the home tagline and introduction are white on the photograph and on navy: black on paper, without the photo's height */
+  .hero-title, .hero-mark, .hero-intro p { color: #000 !important; text-shadow: none !important; }
+  .hero-stage { height: auto !important; }
+  .hero-actions { display: none !important; }
 }
 
 /* ---------- Review fixes, 9 Oct ---------- */
@@ -846,41 +863,80 @@ html.menu-open .wa-float { display: none; }
    ========================================================================== */
 
 /* ---------- Hero ---------- */
-/* One photograph (client request of 23 November 2026, replacing the film): Damascus at night, 3:2.
-   Wide screens: the photograph fills the hero edge to edge; the veil is lightest at the top, where the hills
-   and sky show, and darkest behind the intro and buttons. Every text line keeps at least 4.5:1 against the
-   brightest street light behind it. */
-.page-home .hero { --hero-h: max(640px, min(100svh, 960px)); min-height: var(--hero-h); }
+/* Damascus at dusk from Mount Qasioun (client's photographs of 25 November 2026). The tagline stands at the foot of
+   the photograph, bottom left, in white sans-serif as in the client's mock-up. Its size is capped by the width of the
+   screen, so "International Perspective." stays on one line on any phone, also with a larger default text size; with
+   forced text spacing it wraps instead of being cut. With C.LEGAL500 switched on, "Legal 500" stands bottom right.
+   The introduction and the buttons follow on navy, under the photograph.
+   The photograph (about 1.7:1) is shown edge to edge. From 960 px the header lies over its sky, and it ends 200 px
+   above the foot of the screen, so that the introduction and the buttons show in the first screen (about 2.1:1 on a
+   laptop, close to the mock-up). On smaller screens it starts under the header and is at most as tall as the rest of
+   the screen, so the tagline is always in view. The veil darkens only the top (behind the header) and the foot
+   (behind the tagline): every letter of the tagline keeps at least 4.5:1 against the brightest light behind it.
+   --svh is 1svh, or 1vh in a browser that does not know the unit (00-base.css). */
+.page-home .hero { display: block; min-height: 0; background: var(--navy); }
+.hero-stage {
+  --photo-h: min(calc(100vw / 1.7), calc(100 * var(--svh) - 200px));
+  /* 11.9 em: the width of "International Perspective." (11.78 em) plus one per cent */
+  --title-fs: min(clamp(1.25rem, min(7.2vw, 0.875rem + 3.24vw), 4.25rem), calc((100vw - 2 * var(--gutter)) / 11.9));
+  --title-pb: clamp(24px, 4.2vw, 64px);
+  --text-top: calc(var(--title-fs) * 2.32 + var(--title-pb) + 12px);   /* height of the tagline's zone, from the foot */
+  position: relative; isolation: isolate; overflow: hidden; height: max(var(--photo-h), 560px);
+  display: flex; align-items: flex-end;
+}
+/* At least 0.68 of navy behind every letter of the tagline (4.5:1 needs 0.6 over a white light), fading out above it;
+   from 960 px a lighter veil at the top keeps the header legible over the sky. */
 .page-home .hero-media::after {
-  background: linear-gradient(to top, rgba(16, 28, 44, 0.9) 0%, rgba(16, 28, 44, 0.8) 38%, rgba(16, 28, 44, 0.7) 66%, rgba(16, 28, 44, 0.56) 100%);
+  background:
+    linear-gradient(to top, rgba(16, 28, 44, 0.86) 0, rgba(16, 28, 44, 0.68) var(--text-top), rgba(16, 28, 44, 0) calc(var(--text-top) * 2.1)),
+    linear-gradient(to bottom, rgba(16, 28, 44, 0.5) 0, rgba(16, 28, 44, 0) 22%);
 }
-/* Phones and upright tablets: behind the text the photograph would be cropped to a thin, enlarged strip.
-   It sits whole (3:2), edge to edge, under the header, and fades into navy above the text. On a phone held
-   sideways it is at most 60% of the screen's height (cropped top and bottom), so the headline still shows. */
+.page-home .hero-content { position: relative; padding-top: 0; padding-bottom: var(--title-pb); }
+.hero-title {
+  margin: 0; font-family: var(--sans); font-weight: 500; color: #fff;
+  font-size: var(--title-fs); line-height: 1.16; letter-spacing: -0.012em;
+  text-shadow: 0 1px 14px rgba(16, 28, 44, 0.35);
+}
+.hero-title .line { display: block; }
+/* "Legal 500" on the right, on the line of "Syrian Law." as in the client's sketch ("Syrian Law.   Legal 500" over
+   "International Perspective."): there it never meets the long line on a phone. On a phone held sideways the
+   photograph reaches the foot of the screen, so the mark moves left of the WhatsApp button. Its baseline is set on
+   the first line's baseline (Manrope at line-height 1.16: the baseline is 0.197 em above the foot of the line box);
+   a badge image stands on that baseline, one line high. The ::after makes the tap target about 44 px high. */
+.hero-mark {
+  --mark-fs: clamp(1rem, 0.75rem + 1.3vw, 2.25rem);
+  position: absolute; right: var(--gutter); bottom: calc(var(--title-pb) + 1.357 * var(--title-fs) - 0.197 * var(--mark-fs));
+  color: #fff; text-decoration: none; font-family: var(--sans); font-weight: 500; font-size: var(--mark-fs); line-height: 1.16;
+  text-shadow: 0 1px 14px rgba(16, 28, 44, 0.35);
+}
+.hero-mark::after { content: ""; position: absolute; inset: -12px; }
+.hero-mark:has(img) { bottom: calc(var(--title-pb) + 1.357 * var(--title-fs)); }
+.hero-mark img { display: block; height: calc(1.2 * var(--title-fs)); width: auto; }
+.hero-mark:hover span:first-child { text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+@media (max-height: 480px) and (orientation: landscape) { .hero-mark { right: 92px; } }
 @media (max-width: 959px) {
-  .page-home .hero { --hero-photo-h: min(calc(100vw * 2 / 3), 60svh); background: var(--navy); }
-  .page-home .hero-media { inset: var(--header-h) 0 auto; height: var(--hero-photo-h); overflow: hidden; }
-  .page-home .hero-media::after { background: linear-gradient(to top, rgb(16, 28, 44) 0%, rgba(16, 28, 44, 0.3) 26%, rgba(16, 28, 44, 0.12) 100%); }
-  .page-home .hero-content { padding-top: calc(var(--header-h) + var(--hero-photo-h) + 20px); }
+  .hero-stage { --photo-h: min(calc(100vw / 1.7), calc(100 * var(--svh) - var(--header-h))); height: calc(var(--header-h) + var(--photo-h)); }
+  /* overflow: the photograph, slightly enlarged while it settles, stays under the header's rule */
+  .page-home .hero-media { inset: var(--header-h) 0 0; overflow: hidden; }
+  .page-home .hero-media::after {
+    background: linear-gradient(to top, rgba(16, 28, 44, 0.86) 0, rgba(16, 28, 44, 0.68) var(--text-top), rgba(16, 28, 44, 0) calc(var(--text-top) * 1.5));
+  }
 }
-.hero-title { max-width: none; }
-.hero-sub {
-  display: grid; gap: var(--s-4); margin-top: clamp(32px, 4vw, 56px); padding-top: clamp(24px, 3vw, 32px);
-  border-top: 1px solid rgba(245, 242, 236, 0.26);
-}
+.hero-sub { display: grid; gap: var(--s-4); padding-block: clamp(36px, 5vw, 64px) clamp(56px, 7vw, 96px); }
 .hero-intro { max-width: 40em; }
 .hero-intro p { color: rgba(245, 242, 236, 0.9); font-size: var(--fs-lead); line-height: 1.6; text-wrap: pretty; }
 .hero-intro p + p { margin-top: 0.9em; color: rgba(245, 242, 236, 0.78); font-size: var(--fs-body); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+/* Phones: full-width buttons with the arrow after the label, so the WhatsApp button never sits on an arrow */
 @media (max-width: 479px) {
-  .page-home .hero-title { font-size: min(2.625rem, 10.4vw); }
-  .hero-actions .btn { width: 100%; justify-content: space-between; }
+  .hero-actions .btn { width: 100%; justify-content: flex-start; }
 }
+/* From 1100 px the buttons stand beside the introduction, level with its first line, and clear of the WhatsApp
+   button's lane (24 + 52 px from the edge of the screen, plus 16 px) where the margin of the page is narrower */
 @media (min-width: 1100px) {
-  .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--s-6); }
-  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: var(--s-6); }
+  .hero-actions { flex-direction: column; align-items: stretch; margin-right: max(0px, calc(92px - max(var(--gutter), (100vw - var(--container)) / 2))); }
   .hero-actions .btn { justify-content: space-between; }
-  .page-home .hero-content { padding-bottom: max(clamp(64px, 10vh, 120px), 100px); }   /* the buttons clear the WhatsApp button */
 }
 
 /* ---------- At a Glance: four facts on one ruled line ---------- */
@@ -987,7 +1043,7 @@ html.menu-open .wa-float { display: none; }
   .firm-hero-text { padding-top: 0.35rem; }
 }
 
-/* Our Heritage: the arch-cropped courtyard beside the text */
+/* Our Heritage: the arched photograph beside the text */
 .firm-story-grid { display: grid; gap: clamp(48px, 7vw, 112px); align-items: center; }
 .firm-story-text .sec-tagline { max-width: 18em; }
 .firm-story-text .prose { max-width: 38em; }
@@ -1160,26 +1216,41 @@ html.menu-open .wa-float { display: none; }
 
 /* ---------- Index pages: Capabilities, Industries ---------- */
 .index-page { padding-block: clamp(40px, 6vw, 96px) var(--section); }
-.index-page .page-title { margin-bottom: clamp(32px, 4.5vw, 64px); }
-/* Arched photograph beside the title (PAGE_PHOTOS in site_config.py). Phones: title, photograph, group links.
-   From 600 px the photograph stands in the left column and the title and links sit at its foot, on the line where
-   the list begins. */
-.index-page--photo .index-head { margin-bottom: clamp(40px, 5vw, 72px); }
-.index-page--photo .page-title { margin-bottom: clamp(24px, 5vw, 32px); }
+/* Title, tagline, introduction and (Capabilities) the links to the groups, then the list. With an arched photograph
+   (PAGE_PHOTOS in site_config.py) the head is laid out like the other pages with a header photograph: phones show
+   the photograph under the tagline; from 600 px it stands in the left column beside the title and tagline, with the
+   introduction and the group links under both; from 960 px the introduction and the links sit beside it too. An empty
+   row takes up any height the text lacks, so the title and tagline are never pushed apart. */
+.index-head { margin-bottom: clamp(40px, 5vw, 72px); }
+.index-head .page-title { margin-bottom: 0; }
+.index-intro { margin-top: clamp(24px, 4vw, 32px); }
 .head-photo { width: min(60%, 240px); margin: 0; }
-.index-page--photo .index-head .cap-jump { margin: clamp(28px, 6vw, 40px) 0 0; }
+.index-page--photo .head-photo { margin-top: clamp(24px, 4vw, 32px); }
+.index-head .cap-jump { margin: clamp(28px, 4vw, 40px) 0 0; }
 @media (min-width: 600px) {
   .index-page--photo .index-head {
-    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: 1fr auto auto;
-    column-gap: var(--col-gap);
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); grid-template-rows: auto auto 1fr auto auto;
+    column-gap: var(--col-gap); align-items: start;
   }
-  .index-page--photo .head-photo { grid-column: 1; grid-row: 1 / -1; width: 100%; max-width: 240px; }
-  .index-page--photo .page-title { grid-column: 2; grid-row: 2; margin-bottom: 0; }
-  .index-page--photo .index-head .cap-jump { grid-column: 2; grid-row: 3; margin-top: clamp(20px, 2.5vw, 32px); }
+  .index-page--photo .index-head > * { grid-column: 2; }
+  .index-page--photo .page-title { grid-row: 1; }
+  .index-page--photo .page-tagline { grid-row: 2; }
+  .index-page--photo .head-photo { grid-column: 1; grid-row: 1 / span 3; width: 100%; max-width: 240px; margin: 0; }
+  .index-page--photo .index-intro { grid-column: 1 / -1; grid-row: 4; }
+  .index-page--photo .index-head .cap-jump { grid-column: 1 / -1; grid-row: 5; }
+}
+/* Tablets: the introduction beside the photograph as well, the group links under both */
+@media (min-width: 768px) and (max-width: 959px) {
+  .index-page--photo .index-head { grid-template-rows: auto auto auto 1fr auto; }
+  .index-page--photo .head-photo { grid-row: 1 / span 4; }
+  .index-page--photo .index-intro { grid-column: 2; grid-row: 3; }
+  .index-page--photo .index-head .cap-jump { grid-column: 1 / -1; grid-row: 5; }
 }
 @media (min-width: 960px) {
-  .index-page--photo .index-head { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); }
-  .index-page--photo .head-photo { max-width: 320px; }
+  .index-page--photo .index-head { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); grid-template-rows: auto auto auto auto 1fr; }
+  .index-page--photo .head-photo { grid-row: 1 / -1; max-width: 320px; }
+  .index-page--photo .index-intro { grid-column: 2; grid-row: 3; }
+  .index-page--photo .index-head .cap-jump { grid-column: 2; grid-row: 4; }
 }
 .cap-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
 .cap-row {
@@ -1202,12 +1273,12 @@ html.menu-open .wa-float { display: none; }
 }
 
 /* Capabilities index: links to the four groups, then one list per group */
-.index-page .cap-jump { margin: calc(-1 * clamp(8px, 2vw, 32px)) 0 clamp(40px, 5vw, 72px); }
 .cap-jump ul { list-style: none; margin: 0; padding: 0; }
 .cap-group + .cap-group { margin-top: clamp(48px, 6vw, 88px); }
 .cap-group-title { margin: 0 0 clamp(14px, 1.6vw, 20px); }
 
 /* ---------- HTML sitemap ---------- */
+.sitemap-page .page-title { margin-bottom: clamp(32px, 4.5vw, 64px); }
 .sitemap-grid { display: grid; gap: var(--s-6) var(--col-gap); }
 @media (min-width: 720px) { .sitemap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1200px) { .sitemap-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -1232,8 +1303,8 @@ html.menu-open .wa-float { display: none; }
 .contact-top .sec-label { padding-top: 14px; border-top: 1px solid var(--line-strong); }
 .contact-top .sec-tagline { font-size: clamp(1.625rem, 1.3rem + 1.3vw, 2.375rem); margin-bottom: var(--s-3); }
 .contact-git-intro { color: var(--ink-soft); max-width: 38em; }
-/* The page introduction, moved here from the hero so that the form follows the heading */
-.contact-welcome { grid-column: 1 / -1; max-width: 44rem; }
+/* The page introduction, in the heading beside the arched photograph (40-practice.css places it) */
+.contact-welcome { max-width: 44rem; }
 .contact-welcome p { font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
 .contact-welcome p:first-child { color: var(--ink); }
 
@@ -1349,7 +1420,6 @@ html.menu-open .wa-float { display: none; }
 .contact-map-note a { color: var(--ivory); text-decoration-color: var(--bronze-light); }
 html:not(.js) [data-map-load], html:not(.js) .contact-map-note { display: none; }   /* the map needs site.js; Get Directions still works */
 .map-directions { margin: 14px 0 0; }
-.map-directions .ext { width: 17px; height: 17px; color: var(--bronze); }
 
 /* Until then: the office address over the city, with no request to Google */
 .map-pending { position: relative; display: grid; align-items: end; min-height: 420px; height: 100%; overflow: hidden; border-radius: var(--radius); background: var(--navy); color: var(--ivory); isolation: isolate; }

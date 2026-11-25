@@ -12,7 +12,7 @@ SITE_NAME = "Baba Law Firm"
 DOMAIN = "https://babalawfirm.net"          # canonical domain: confirm before launch
 PREVIEW_BASE_PATH = "/baba-preview/"         # GitHub Pages project path (404 page only)
 LANG = "en"
-FOUNDING_YEAR = "1967"
+FOUNDING_YEAR = "1969"
 
 # ---------------------------------------------------------------- contact details
 EMAIL = "info@babalawfirm.net"
@@ -63,20 +63,43 @@ COOKIE_REGISTER = [
 ]
 OPTIONAL_CATEGORIES = []   # e.g. [{"key": "analytics", "name": "Analytics", "description": "..."}]
 
+# ---------------------------------------------------------------- The Legal 500
+# An optional link to the firm's page in The Legal 500 guide. Everything here stays OFF until the client asks for it;
+# then set "on" to True and "url" to that page (the build stops if "url" is missing). The client's WhatsApp request
+# of 25 November asks for "Legal 500" at the foot of the home photograph, on the right, and for the Legal 500 logo on
+# every page; his notes of 24 November ask, following The Legal 500's logo rules, that the site neither describes the
+# firm as "ranked" or "recommended" nor uses their logos unless the firm is actually ranked. When on, the site shows,
+# each linked to the firm's page (new tab):
+#   - the home photograph: "Legal 500" at its foot, on the right, as plain text in the site's own type, never their
+#     lettering;
+#   - every page: "The Legal 500" under the logo in the footer;
+#   - Our Firm: the line "firm_line" under the introduction.
+# "badge": a logo file that The Legal 500 supplies to the firm, e.g. "assets/img/legal500/badge.svg", for use only
+# once the firm is ranked; it then replaces the text on the home photograph and in the footer. "" keeps the text.
+LEGAL500 = {
+    "on": False,
+    "url": "",
+    "badge": "",
+    "badge_alt": "The Legal 500",
+    "firm_line": "Baba Law Firm in The Legal 500",
+}
+
 # ---------------------------------------------------------------- photographs
 # All photographs are self-hosted in PHOTO_DIR, so the pages load nothing from third parties. To add or replace one,
 # export it as AVIF, WebP and JPEG at several widths under the same name and adjust "alt" and "pos".
 PHOTO_DIR = "assets/img/photos"   # {key}-{width}.avif / .webp / .jpg for each key below; the build uses the widths on disk
+# ("file" names another key whose files a photograph shares, with its own alt and position)
 PHOTOS = {
-    # Home hero (since 24 November 2026): Hani chose this sharper photograph over the film's first frame, which is
-    # only 854 px wide (the client's request of 23 November asks for at least 1920 px). It is the free-licence stock
-    # photograph that was the home hero until 21 November (files restored from commit c5904c0~1; AVIF files re-encoded
-    # smaller on 24 November), 2400 x 1600 px:
-    # Unsplash image photo-1561760041-f446e77d0885; the Unsplash licence (https://unsplash.com/license) allows
-    # commercial use without attribution. "Damascus at night" rests on the photographer's own location tag.
-    "hero": {"alt": "Damascus at night", "pos": "60% 55%"},
+    # Home hero (client's photographs of 25 November 2026, replacing the Unsplash photograph of 24 November): Damascus
+    # at dusk from Mount Qasioun, Adobe Stock 56856854, licensed by the firm (Standard licence). Only a 1280 x 751 copy
+    # has arrived (sent over WhatsApp), so the hero is sharp up to about 1280 px wide and soft on larger and
+    # high-density screens: replace it with the licensed full-size file when it arrives (the client asks for 640-2400 px).
+    "hero": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 60%"},
+    # The Visit Our Office band on Contact shows the same photograph (client request of 25 November 2026) from the same
+    # files, so a visitor downloads it once; the licensed original replaces both.
+    "panorama": {"file": "hero", "alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
     # Received from the firm on 21 November 2026 at 800-1280 px (compressed copies): used only in the small
-    # arched frames and, for the panorama, under the navy veil of the Visit Our Office band. Replace with the originals when they arrive.
+    # arched frames. Replace with the originals when they arrive.
     # The door is the photograph as received (854 x 1280, not cropped). "arch" is the circle fitted to the outer
     # edge of its stone arch, in pixels of the 854-wide picture: the arch's axis is at x = 398.5 (28.5 px left of
     # the picture's middle) and a least-squares fit through 13 points on the edge gives the centre height 536.3.
@@ -87,20 +110,18 @@ PHOTOS = {
              # history, commit 92cc01f, if the door ever needs re-aligning); wins over the computed fit.
              "place": {"width": "107.15%", "left": "0.92%", "top": "-10.89%"}},
     "street": {"alt": "A lane in old Damascus spanned by a row of stone arches", "pos": "45% 50%"},
-    "panorama": {"alt": "Damascus at dusk, seen from Mount Qasioun", "pos": "50% 70%"},
-    # Brought back on the client's request of 23 November 2026 (on the site until 21 November, removed in commit
-    # 840da34; files restored from 840da34~1). Free-licence photographs from Pexels: the Pexels licence
-    # (https://www.pexels.com/license/) allows commercial use without attribution. Sources, for the firm's records:
-    # courtyard: "Historic Courtyard in Damascus, Syria" by Hala Hejazy,
-    #   https://www.pexels.com/photo/historic-courtyard-in-damascus-syria-34682160/
-    # window: "Traditional Mashrabiya Window in Damascus Syria" by Sami Raad,
-    #   https://www.pexels.com/photo/traditional-mashrabiya-window-in-damascus-syria-30615454/
-    "courtyard": {"alt": "A Damascene courtyard with a fountain and banded stone walls", "pos": "50% 60%"},
-    "window": {"alt": "A wooden mashrabiya window set in a banded stone wall", "pos": "65% 45%"},
-    # Regulatory Compliance & Sanctions (client request of 23 November 2026), also from Pexels (same licence):
-    # alley: "Narrow Alleyway in Old Damascus, Syria" by Baraa Obied,
-    #   https://www.pexels.com/photo/narrow-alleyway-in-old-damascus-syria-39344630/ (downloaded at 1600 x 2400)
-    "alley": {"alt": "A quiet lane in old Damascus between banded stone and plastered house walls", "pos": "50% 60%"},
+    # Arched photographs beside the page titles (client's photographs of 25 November 2026, replacing the Pexels
+    # photographs of 23 November), cropped to 4:5 as in the thumbnails of the client's document, the Hejaz Railway
+    # Station centred on its clock and cut above the police car at the entrance. Rights, as the client states them: the
+    # meeting room is the firm's own photograph; hejaz, umayyad and central-bank are stills from the firm's film of
+    # Damascus, used at the firm's request. Only compressed copies have arrived (sent over WhatsApp, 420-784 px wide
+    # after cropping): sharp in the frame (at most 320 px wide) on ordinary screens, soft on high-density ones. Replace
+    # with the originals when they arrive.
+    "office": {"alt": "The meeting room of Baba Law Firm’s Damascus office, overlooking the Mazzeh Highway", "pos": "50% 50%"},
+    "hejaz": {"alt": "The Hejaz Railway Station in Damascus, lit at night", "pos": "50% 50%"},
+    "umayyad": {"alt": "Umayyad Square in Damascus at night, with the Damascene Sword monument and its fountains",
+                "pos": "50% 50%"},
+    "central-bank": {"alt": "The Central Bank of Syria building in Damascus at night", "pos": "50% 50%"},
     # Tawfeeq Baba's two certificates, shown under Our Heritage on Our Firm (client request of 23 November 2026, which
     # asked for Our People; Hani placed them on Our Firm). The firm sent one photograph of both frames on a wall
     # (24 November 2026, 1280 x 1280 px, a compressed copy). Each frame was cut out of it and straightened to a
@@ -119,12 +140,13 @@ FIRM_CERTIFICATES = [
     ("cert-bar", "Licence to Practise Law, Aleppo Bar Association, 1969"),
 ]
 
-# Arched photograph in a page's header, beside its title (client request of 23 November 2026).
+# Arched photograph in a page's header, beside its title (client requests of 23 and 25 November 2026).
 # Keys are page addresses as in build.registry(); values are keys of PHOTOS.
 PAGE_PHOTOS = {
-    "capabilities/": "courtyard",
-    "industries/": "window",
-    "capabilities/regulatory-compliance-sanctions": "alley",
+    "capabilities/": "hejaz",
+    "industries/": "umayyad",
+    "capabilities/regulatory-compliance-sanctions": "central-bank",
+    "contact": "office",
 }
 
 # Portraits (received 21 November 2026): 4:5 crops at 640 and 800 px wide, AVIF/WebP/JPEG

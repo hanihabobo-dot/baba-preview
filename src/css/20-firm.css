@@ -12,7 +12,7 @@
   .firm-hero-text { padding-top: 0.35rem; }
 }
 
-/* Our Heritage: the arch-cropped courtyard beside the text */
+/* Our Heritage: the arched photograph beside the text */
 .firm-story-grid { display: grid; gap: clamp(48px, 7vw, 112px); align-items: center; }
 .firm-story-text .sec-tagline { max-width: 18em; }
 .firm-story-text .prose { max-width: 38em; }

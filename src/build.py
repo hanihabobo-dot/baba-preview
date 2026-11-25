@@ -130,13 +130,13 @@ def registry():
     for slug, name in C.PEOPLE:
         add("our-people/" + slug, f"our-people/{slug}.html", "profile", "our-people/" + slug, name,
             [H, ("Our People", "our-people/"), (name, "our-people/" + slug)], "our-people/", slug=slug, body="page-profile")
-    add("capabilities/", "capabilities/index.html", "cap-index", None, "Capabilities",
+    add("capabilities/", "capabilities/index.html", "cap-index", "capabilities/index", "Capabilities",
         [H, ("Capabilities", "capabilities/")], "capabilities/", body="page-index")
     for slug, title in C.CAPABILITIES:
         add("capabilities/" + slug, f"capabilities/{slug}.html", "capability", "capabilities/" + slug, title,
             [H, ("Capabilities", "capabilities/"), (title, "capabilities/" + slug)], "capabilities/", slug=slug,
             body="page-practice page-capability")
-    add("industries/", "industries/index.html", "ind-index", None, "Industries",
+    add("industries/", "industries/index.html", "ind-index", "industries/index", "Industries",
         [H, ("Industries", "industries/")], "industries/", body="page-index")
     for slug, title in C.INDUSTRIES:
         add("industries/" + slug, f"industries/{slug}.html", "industry", "industries/" + slug, title,
